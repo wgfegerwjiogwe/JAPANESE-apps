@@ -1,28 +1,138 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Learning</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <title>Japanese Learning Apps</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 28px 18px;
+      background: #111318;
+      color: #f2f3f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    main {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    p {
+      color: #a9afbd;
+      line-height: 1.5;
+    }
+
+    .apps {
+      display: grid;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .app {
+      display: block;
+      padding: 18px;
+      border: 1px solid #303440;
+      border-radius: 14px;
+      background: #1b1e26;
+      color: #f2f3f7;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    .app:active {
+      background: #292e3a;
+    }
+
+    #status {
+      margin-top: 22px;
+      font-size: 13px;
+    }
+  </style>
 </head>
 
 <body>
-    <h1>🇯🇵 Japanese Learning</h1>
+  <main>
+    <h1>Japanese Learning Apps</h1>
+    <p>Choose an app to start practicing.</p>
 
-    <ul>
-        <li><a href="AUDIO%20WORDS%20HIRAGANA%20PRACTICE.html">Audio Words Hiragana Practice</a></li>
+    <div class="apps">
+      <a class="app" href="./HIRAGANA%20PRACTICE..html">
+        Hiragana Practice
+      </a>
 
-        <li><a href="HIRAGANA_KATAKANA_MIXED.html">Hiragana / Katakana Mixed</a></li>
+      <a class="app" href="./KATAKANA%20PRACTICE.html">
+        Katakana Practice
+      </a>
 
-        <li><a href="KANJI%20PRACTICE%20%28EDGE%29.html">Kanji Practice (Edge)</a></li>
+      <a class="app" href="./HIRAGANA_KATAKANA_MIXED.html">
+        Hiragana + Katakana
+      </a>
 
-        <li><a href="KATAKANA%20PRACTICE.html">Katakana Practice</a></li>
+      <a class="app" href="./SPEED%20HIRAGANA.html">
+        Speed Hiragana
+      </a>
 
-        <li><a href="SPEED%20HIRAGANA.html">Speed Hiragana</a></li>
+      <a class="app" href="./SPEED%20KATAKANA.html">
+        Speed Katakana
+      </a>
 
-        <li><a href="SPEED%20KATAKANA.html">Speed Katakana</a></li>
+      <a class="app" href="./KANJI%20PRACTICE%20(EDGE).html">
+        Kanji Practice
+      </a>
 
-        <li><a href="VOCABULARY_FINAL%20%28EDGE%29.html">Vocabulary (Edge)</a></li>
-    </ul>
+      <a class="app" href="./VOCABULARY_FINAL%20(EDGE).html">
+        Vocabulary Practice
+      </a>
+
+      <a class="app" href="./Audio%20Words%20Hiragana%20Practice.html">
+        Audio Words Hiragana Practice
+      </a>
+    </div>
+
+    <p id="status">Checking offline support...</p>
+  </main>
+
+  <script>
+    const status = document.getElementById("status");
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          await navigator.serviceWorker.register(
+            "./service-worker.js",
+            { scope: "./" }
+          );
+
+          await navigator.serviceWorker.ready;
+
+          status.textContent =
+            "Offline support enabled. Open each app online at least once.";
+        } catch (error) {
+          status.textContent =
+            "Could not enable offline support. Check the website URL.";
+          console.error("Service worker registration failed:", error);
+        }
+      });
+    } else {
+      status.textContent =
+        "This browser does not support offline app caching.";
+    }
+  </script>
 </body>
 </html>
