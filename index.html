@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111318">
+
   <title>Japanese Learning Apps</title>
 
   <style>
@@ -103,6 +104,10 @@
       <a class="app" href="./Audio%20Words%20Hiragana%20Practice.html">
         Audio Words Hiragana Practice
       </a>
+
+      <a class="app" href="./JAPANESEWRITING.html">
+        Japanese Writing Practice
+      </a>
     </div>
 
     <p id="status">Checking offline support...</p>
@@ -126,6 +131,7 @@
         } catch (error) {
           status.textContent =
             "Could not enable offline support. Check the website URL.";
+
           console.error("Service worker registration failed:", error);
         }
       });
