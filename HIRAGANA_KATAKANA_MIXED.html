@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Hiragana + Katakana Mixed Practice</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#17181c;--muted:#686b73;--border:#dfe1e7;--accent:#5b6cff;--accent2:#eef0ff;--good:#16794b;--bad:#b42318}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}
+.wrap{max-width:850px;margin:28px auto;padding:0 16px}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 5px}.sub{color:var(--muted);font-size:14px}.score{font-weight:750}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+button,input{font:inherit}button{min-height:44px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);padding:9px 12px;cursor:pointer;font-weight:650}
+button:hover{border-color:#aeb2bd}button.active,.primary{background:var(--accent2);border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;text-align:center}
+.instruction{font-size:14px;color:var(--muted)}
+.prompt{font-family:"Noto Sans JP","Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;font-size:72px;font-weight:750;padding:17px 0 9px;min-height:110px}
+.prompt.romaji{font-family:inherit;font-size:46px}
+.secondary{font-size:16px;color:var(--muted);min-height:26px;margin-bottom:12px}
+.area{display:grid;gap:12px;justify-items:center}.hidden{display:none!important}
+input{width:min(330px,100%);min-height:48px;border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;font-size:19px;background:white;color:var(--text)}
+.choices{width:min(500px,100%);display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choices button{font-size:20px}.choices .kana-choice{font-family:"Noto Sans JP","Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;font-size:34px}
+.feedback{min-height:26px;font-weight:750;font-size:14px}.good{color:var(--good)}.bad{color:var(--bad)}
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0}
+.legend{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;line-height:1.75;text-align:center}
+.streak{font-size:13px;color:var(--muted)}.mode-info{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
+@media(max-width:620px){.tabs{grid-template-columns:1fr 1fr}.tabs button:last-child{grid-column:1/-1}.prompt{font-size:62px}.prompt.romaji{font-size:40px}.card{padding:20px 13px}.choices{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.tabs{grid-template-columns:1fr}.tabs button:last-child{grid-column:auto}.choices{grid-template-columns:1fr}}
+@media(prefers-color-scheme:dark){:root{--bg:#111318;--card:#1a1d24;--text:#f3f4f6;--muted:#a7abb5;--border:#343844;--accent2:#2b315f}button,input{background:#20232b;color:var(--text)}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div>
+      <h1>Hiragana + Katakana Mixed Practice</h1>
+      <div class="sub">Train yourself to recognize both scripts instantly</div>
+    </div>
+    <div>
+      <div class="score"><span id="score">0</span> / <span id="total">0</span> correct</div>
+      <div class="streak">Streak: <b id="streak">0</b> · Best: <b id="best">0</b></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button id="typeMode">Mixed → Romaji</button>
+    <button id="choiceMode">Mixed → 4 Options</button>
+    <button id="romajiMode">Romaji → Kana</button>
+    <button id="scriptMode">Hira or Kata?</button>
+    <button id="matchMode">Match the Pair</button>
+    <button id="rapidMode">Rapid Recognition</button>
+  </div>
+
+  <section class="card">
+    <div id="instruction" class="instruction"></div>
+    <div id="prompt" class="prompt"></div>
+    <div id="secondary" class="secondary"></div>
+
+    <div id="typeArea" class="area hidden">
+      <label for="answer">Type the romaji:</label>
+      <input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. shi">
+      <button id="check" class="primary">Check answer</button>
+      <div id="typeFeedback" class="feedback"></div>
+    </div>
+
+    <div id="choiceArea" class="area hidden">
+      <div id="choices" class="choices"></div>
+      <div id="choiceFeedback" class="feedback"></div>
+    </div>
+
+    <div id="romajiArea" class="area hidden">
+      <div id="romajiChoices" class="choices"></div>
+      <div id="romajiFeedback" class="feedback"></div>
+    </div>
+
+    <div id="scriptArea" class="area hidden">
+      <div class="choices">
+        <button id="chooseHira">Hiragana</button>
+        <button id="chooseKata">Katakana</button>
+      </div>
+      <div id="scriptFeedback" class="feedback"></div>
+    </div>
+
+    <div id="matchArea" class="area hidden">
+      <div id="matchChoices" class="choices"></div>
+      <div id="matchFeedback" class="feedback"></div>
+    </div>
+
+    <div id="rapidArea" class="area hidden">
+      <div class="choices">
+        <button id="rapidHira">Hiragana</button>
+        <button id="rapidKata">Katakana</button>
+      </div>
+      <div id="rapidFeedback" class="feedback"></div>
+      <div style="font-size:12px;color:var(--muted)">Correct answers immediately advance to the next kana.</div>
+    </div>
+  </section>
+
+  <div class="controls">
+    <button id="next">Next</button>
+    <button id="randomize">Randomize</button>
+    <button id="reset">Reset score</button>
+  </div>
+
+  <div class="legend">
+    <b>Full mixed set:</b><br>
+    Basic kana · Dakuten · Handakuten<br>
+    Hiragana: あ〜ん / が〜ぽ　　Katakana: ア〜ン / ガ〜ポ
+  </div>
+  <div class="mode-info">
+    Standard beginner romaji: し/シ = shi · ち/チ = chi · つ/ツ = tsu · ふ/フ = fu · じ/ジ = ji. Rare ぢ/ヂ and づ/ヅ are included as ji and zu.
+  </div>
+</main>
+
+<script>
+(()=>{
+const pairs=[["あ", "ア", "a"], ["い", "イ", "i"], ["う", "ウ", "u"], ["え", "エ", "e"], ["お", "オ", "o"], ["か", "カ", "ka"], ["き", "キ", "ki"], ["く", "ク", "ku"], ["け", "ケ", "ke"], ["こ", "コ", "ko"], ["さ", "サ", "sa"], ["し", "シ", "shi"], ["す", "ス", "su"], ["せ", "セ", "se"], ["そ", "ソ", "so"], ["た", "タ", "ta"], ["ち", "チ", "chi"], ["つ", "ツ", "tsu"], ["て", "テ", "te"], ["と", "ト", "to"], ["な", "ナ", "na"], ["に", "ニ", "ni"], ["ぬ", "ヌ", "nu"], ["ね", "ネ", "ne"], ["の", "ノ", "no"], ["は", "ハ", "ha"], ["ひ", "ヒ", "hi"], ["ふ", "フ", "fu"], ["へ", "ヘ", "he"], ["ほ", "ホ", "ho"], ["ま", "マ", "ma"], ["み", "ミ", "mi"], ["む", "ム", "mu"], ["め", "メ", "me"], ["も", "モ", "mo"], ["や", "ヤ", "ya"], ["ゆ", "ユ", "yu"], ["よ", "ヨ", "yo"], ["ら", "ラ", "ra"], ["り", "リ", "ri"], ["る", "ル", "ru"], ["れ", "レ", "re"], ["ろ", "ロ", "ro"], ["わ", "ワ", "wa"], ["を", "ヲ", "wo"], ["ん", "ン", "n"], ["が", "ガ", "ga"], ["ぎ", "ギ", "gi"], ["ぐ", "グ", "gu"], ["げ", "ゲ", "ge"], ["ご", "ゴ", "go"], ["ざ", "ザ", "za"], ["じ", "ジ", "ji"], ["ず", "ズ", "zu"], ["ぜ", "ゼ", "ze"], ["ぞ", "ゾ", "zo"], ["だ", "ダ", "da"], ["ぢ", "ヂ", "ji"], ["づ", "ヅ", "zu"], ["で", "デ", "de"], ["ど", "ド", "do"], ["ば", "バ", "ba"], ["び", "ビ", "bi"], ["ぶ", "ブ", "bu"], ["べ", "ベ", "be"], ["ぼ", "ボ", "bo"], ["ぱ", "パ", "pa"], ["ぴ", "ピ", "pi"], ["ぷ", "プ", "pu"], ["ぺ", "ペ", "pe"], ["ぽ", "ポ", "po"]];
+const $=s=>document.querySelector(s);
+const areas={type:$("#typeArea"),choice:$("#choiceArea"),romaji:$("#romajiArea"),script:$("#scriptArea"),match:$("#matchArea"),rapid:$("#rapidArea")};
+let mode="type",current=null,script=null,answered=false,score=0,total=0,streak=0,best=0,lastKey="";
+const prompt=$("#prompt"),secondary=$("#secondary"),input=$("#answer");
+const typeFeedback=$("#typeFeedback"),choiceFeedback=$("#choiceFeedback"),romajiFeedback=$("#romajiFeedback"),scriptFeedback=$("#scriptFeedback"),matchFeedback=$("#matchFeedback"),rapidFeedback=$("#rapidFeedback");
+const choices=$("#choices"),romajiChoices=$("#romajiChoices"),matchChoices=$("#matchChoices");
+
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function updateScore(){$("#score").textContent=score;$("#total").textContent=total;$("#streak").textContent=streak;$("#best").textContent=best}
+function record(ok){total++;if(ok){score++;streak++;best=Math.max(best,streak)}else streak=0;updateScore()}
+function clearFeedback(){[typeFeedback,choiceFeedback,romajiFeedback,scriptFeedback,matchFeedback,rapidFeedback].forEach(x=>{x.textContent="";x.className="feedback"});input.value="";choices.innerHTML="";romajiChoices.innerHTML="";matchChoices.innerHTML="";answered=false}
+function randomPair(){let p,key;do{p=pairs[Math.floor(Math.random()*pairs.length)];script=Math.random()<.5?"hira":"kata";key=p[2]+"|"+script}while(pairs.length>1&&key===lastKey);lastKey=key;return p}
+function setMode(m){mode=m;Object.entries(areas).forEach(([k,v])=>v.classList.toggle("hidden",k!==m));["typeMode","choiceMode","romajiMode","scriptMode","matchMode","rapidMode"].forEach(id=>$("#"+id).classList.remove("active"));const ids={type:"typeMode",choice:"choiceMode",romaji:"romajiMode",script:"scriptMode",match:"matchMode",rapid:"rapidMode"};$("#"+ids[m]).classList.add("active");pick()}
+function pick(){
+ clearFeedback();current=randomPair();const char=script==="hira"?current[0]:current[1];prompt.classList.remove("romaji");
+ if(mode==="type"){
+   $("#instruction").textContent="Hiragana and Katakana are mixed. Type the romaji.";
+   prompt.textContent=char;secondary.textContent=script==="hira"?"Hiragana":"Katakana";setTimeout(()=>input.focus(),20);
+ }else if(mode==="choice"){
+   $("#instruction").textContent="Choose the correct romaji.";prompt.textContent=char;secondary.textContent="";
+   const pool=[...new Set(pairs.map(x=>x[2]))].filter(x=>x!==current[2]);const opts=shuffle(pool).slice(0,3).concat(current[2]);
+   shuffle(opts).forEach(v=>{const b=document.createElement("button");b.type="button";b.textContent=v;b.addEventListener("click",()=>chooseRomaji(v));choices.appendChild(b)});
+ }else if(mode==="romaji"){
+   $("#instruction").textContent="Choose the matching kana. Hiragana and Katakana are deliberately mixed.";
+   prompt.classList.add("romaji");prompt.textContent=current[2];secondary.textContent="Pick the correct character";
+   const correctScript=Math.random()<.5?"hira":"kata",correct=correctScript==="hira"?current[0]:current[1];let pool=[];
+   for(const p of shuffle(pairs)){if(p[2]===current[2])continue;const c=Math.random()<.5?p[0]:p[1];if(!pool.includes(c))pool.push(c);if(pool.length===3)break}
+   shuffle([correct,...pool]).forEach(v=>{const b=document.createElement("button");b.type="button";b.textContent=v;b.className="kana-choice";b.addEventListener("click",()=>chooseKana(v,correct));romajiChoices.appendChild(b)});
+ }else if(mode==="script"){
+   $("#instruction").textContent="Which writing system is this character?";prompt.textContent=char;secondary.textContent=current[2];
+ }else if(mode==="match"){
+   const sourceIsHira=Math.random()<.5;script=sourceIsHira?"hira":"kata";const source=sourceIsHira?current[0]:current[1],target=sourceIsHira?current[1]:current[0],idx=sourceIsHira?1:0;
+   $("#instruction").textContent=sourceIsHira?"Match this Hiragana to its Katakana pair.":"Match this Katakana to its Hiragana pair.";
+   prompt.textContent=source;secondary.textContent="Sound: "+current[2];let pool=[];
+   for(const p of shuffle(pairs)){if(p[2]===current[2])continue;const c=p[idx];if(!pool.includes(c))pool.push(c);if(pool.length===3)break}
+   shuffle([target,...pool]).forEach(v=>{const b=document.createElement("button");b.type="button";b.textContent=v;b.className="kana-choice";b.addEventListener("click",()=>chooseMatch(v,target));matchChoices.appendChild(b)});
+ }else{
+   $("#instruction").textContent="Rapid script recognition — identify it as fast as possible.";prompt.textContent=char;secondary.textContent=current[2];
+ }
+}
+function finishFeedback(el,ok,msg){record(ok);answered=true;el.textContent=msg;el.className="feedback "+(ok?"good":"bad")}
+function checkType(){
+ if(mode!=="type")return;if(answered){pick();return}
+ const v=input.value.trim().toLowerCase().replace(/\s+/g,"");if(!v){typeFeedback.textContent="Type an answer first.";typeFeedback.className="feedback bad";return}
+ const ok=v===current[2];finishFeedback(typeFeedback,ok,ok?"✓ Correct!":"✗ Correct answer: "+current[2]);
+}
+function chooseRomaji(v){
+ if(answered)return;const ok=v===current[2];finishFeedback(choiceFeedback,ok,ok?"✓ Correct!":"✗ Correct answer: "+current[2]);
+ [...choices.children].forEach(x=>{x.disabled=true;if(x.textContent===current[2])x.classList.add("active")});
+}
+function chooseKana(v,correct){
+ if(answered)return;const ok=v===correct;finishFeedback(romajiFeedback,ok,ok?"✓ Correct!":"✗ Correct answer: "+correct);
+ [...romajiChoices.children].forEach(x=>{x.disabled=true;if(x.textContent===correct)x.classList.add("active")});
+}
+function chooseScript(which,rapid=false){
+ if(answered)return;const correct=script==="hira"?"Hiragana":"Katakana",ok=which===script,el=rapid?rapidFeedback:scriptFeedback;record(ok);
+ if(rapid){el.textContent=ok?"✓":"✗ "+correct;el.className="feedback "+(ok?"good":"bad");setTimeout(pick,ok?180:650)}
+ else{answered=true;el.textContent=ok?"✓ Correct!":"✗ This is "+correct;el.className="feedback "+(ok?"good":"bad")}
+}
+function chooseMatch(v,target){
+ if(answered)return;const ok=v===target;finishFeedback(matchFeedback,ok,ok?"✓ Correct pair!":"✗ Correct pair: "+target);
+ [...matchChoices.children].forEach(x=>{x.disabled=true;if(x.textContent===target)x.classList.add("active")});
+}
+
+$("#check").addEventListener("click",checkType);
+input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkType()}});
+$("#chooseHira").addEventListener("click",()=>chooseScript("hira"));
+$("#chooseKata").addEventListener("click",()=>chooseScript("kata"));
+$("#rapidHira").addEventListener("click",()=>chooseScript("hira",true));
+$("#rapidKata").addEventListener("click",()=>chooseScript("kata",true));
+$("#typeMode").addEventListener("click",()=>setMode("type"));
+$("#choiceMode").addEventListener("click",()=>setMode("choice"));
+$("#romajiMode").addEventListener("click",()=>setMode("romaji"));
+$("#scriptMode").addEventListener("click",()=>setMode("script"));
+$("#matchMode").addEventListener("click",()=>setMode("match"));
+$("#rapidMode").addEventListener("click",()=>setMode("rapid"));
+$("#next").addEventListener("click",pick);
+$("#randomize").addEventListener("click",pick);
+$("#reset").addEventListener("click",()=>{score=0;total=0;streak=0;best=0;updateScore();pick()});
+setMode("type");
+})();
+</script>
+</body>
+</html>

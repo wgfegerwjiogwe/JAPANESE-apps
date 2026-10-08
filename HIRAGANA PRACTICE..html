@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Japanese Hiragana Practice</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#17181c;--muted:#686b73;--border:#dfe1e7;--accent:#5b6cff;--accent2:#eef0ff;--good:#16794b;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:780px;margin:32px auto;padding:0 16px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 5px}.sub{color:var(--muted);font-size:14px}.score{font-weight:700}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
+button,input{font:inherit}button{min-height:44px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);padding:9px 14px;cursor:pointer;font-weight:650}
+button:hover{border-color:#aeb2bd}.active,.primary{background:var(--accent2);border-color:var(--accent);color:var(--text)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;text-align:center}
+.instruction{font-size:14px;color:var(--muted)}.prompt{font-size:52px;font-weight:750;padding:18px 0 10px;min-height:90px}
+.meaning{color:var(--muted);font-size:14px;min-height:22px;margin-bottom:12px}.hidden{display:none!important}
+.area{display:grid;gap:12px;justify-items:center}.answer{font-size:48px;font-weight:750;min-height:58px}
+input{width:min(330px,100%);min-height:48px;border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;font-size:19px;background:white;color:var(--text)}
+.choices{width:min(460px,100%);display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choices button{font-size:18px}
+.feedback{min-height:24px;font-weight:700;font-size:14px}.good{color:var(--good)}.bad{color:var(--bad)}
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0}.legend{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;line-height:1.75;text-align:center}
+.small{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+@media(max-width:520px){.tabs{grid-template-columns:1fr}.prompt{font-size:44px}.card{padding:20px 14px}.choices{grid-template-columns:1fr 1fr}}
+@media(prefers-color-scheme:dark){:root{--bg:#111318;--card:#1a1d24;--text:#f3f4f6;--muted:#a7abb5;--border:#343844;--accent2:#2b315f}button,input{background:#20232b;color:var(--text)}.legend{background:var(--card)}}
+
+.practice-set{margin:16px 0;text-align:left;padding:16px}.practice-set-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.practice-set-title{font-weight:800;font-size:13px;letter-spacing:.05em}.practice-set select{min-height:40px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text);padding:7px 10px;font:inherit}.set-section{margin-top:12px}.set-label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}.kana-groups{display:grid;gap:7px}.kana-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.row-toggle{min-width:48px;min-height:36px;padding:6px 8px}.kana-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);border-radius:8px;background:var(--card);padding:6px 8px;min-height:36px;cursor:pointer;user-select:none}.kana-chip input{width:auto;min-height:0;margin:0}.kana-chip:has(input:checked){background:var(--accent2);border-color:var(--accent)}.set-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.selection-summary{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.55}.selection-summary b{color:var(--text)}.empty-state{font-size:15px;color:var(--bad);font-weight:700;padding:12px 0}
+</style>
+</head>
+<body>
+<main class="wrap">
+ <div class="top">
+  <div><h1>Japanese Hiragana Practice</h1><div class="sub">Basic hiragana + dakuten + handakuten + digraphs / yōon</div></div>
+  <div class="score"><span id="score">0</span> / <span id="total">0</span> correct</div>
+ </div>
+
+
+ <section class="card practice-set">
+  <div class="practice-set-head"><div><div class="practice-set-title">PRACTICE SET</div><div class="small" style="text-align:left;margin-top:3px">Choose only the kana you have learned. Row buttons quickly toggle a full row.</div></div><select id="practicePreset"><option value="my">My Selection</option><option value="basic">All Basic</option><option value="all">All Kana</option><option value="custom">Custom</option></select></div>
+  <div class="set-section"><div class="set-label">Basic</div><div class="kana-groups"><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="a">A</button><label class="kana-chip"><input type="checkbox" data-kana-char="あ"> あ</label><label class="kana-chip"><input type="checkbox" data-kana-char="い"> い</label><label class="kana-chip"><input type="checkbox" data-kana-char="う"> う</label><label class="kana-chip"><input type="checkbox" data-kana-char="え"> え</label><label class="kana-chip"><input type="checkbox" data-kana-char="お"> お</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ka">KA</button><label class="kana-chip"><input type="checkbox" data-kana-char="か"> か</label><label class="kana-chip"><input type="checkbox" data-kana-char="き"> き</label><label class="kana-chip"><input type="checkbox" data-kana-char="く"> く</label><label class="kana-chip"><input type="checkbox" data-kana-char="け"> け</label><label class="kana-chip"><input type="checkbox" data-kana-char="こ"> こ</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="sa">SA</button><label class="kana-chip"><input type="checkbox" data-kana-char="さ"> さ</label><label class="kana-chip"><input type="checkbox" data-kana-char="し"> し</label><label class="kana-chip"><input type="checkbox" data-kana-char="す"> す</label><label class="kana-chip"><input type="checkbox" data-kana-char="せ"> せ</label><label class="kana-chip"><input type="checkbox" data-kana-char="そ"> そ</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ta">TA</button><label class="kana-chip"><input type="checkbox" data-kana-char="た"> た</label><label class="kana-chip"><input type="checkbox" data-kana-char="ち"> ち</label><label class="kana-chip"><input type="checkbox" data-kana-char="つ"> つ</label><label class="kana-chip"><input type="checkbox" data-kana-char="て"> て</label><label class="kana-chip"><input type="checkbox" data-kana-char="と"> と</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="na">NA</button><label class="kana-chip"><input type="checkbox" data-kana-char="な"> な</label><label class="kana-chip"><input type="checkbox" data-kana-char="に"> に</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぬ"> ぬ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ね"> ね</label><label class="kana-chip"><input type="checkbox" data-kana-char="の"> の</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ha">HA</button><label class="kana-chip"><input type="checkbox" data-kana-char="は"> は</label><label class="kana-chip"><input type="checkbox" data-kana-char="ひ"> ひ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ふ"> ふ</label><label class="kana-chip"><input type="checkbox" data-kana-char="へ"> へ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ほ"> ほ</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ma">MA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ま"> ま</label><label class="kana-chip"><input type="checkbox" data-kana-char="み"> み</label><label class="kana-chip"><input type="checkbox" data-kana-char="む"> む</label><label class="kana-chip"><input type="checkbox" data-kana-char="め"> め</label><label class="kana-chip"><input type="checkbox" data-kana-char="も"> も</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ya">YA</button><label class="kana-chip"><input type="checkbox" data-kana-char="や"> や</label><label class="kana-chip"><input type="checkbox" data-kana-char="ゆ"> ゆ</label><label class="kana-chip"><input type="checkbox" data-kana-char="よ"> よ</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ra">RA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ら"> ら</label><label class="kana-chip"><input type="checkbox" data-kana-char="り"> り</label><label class="kana-chip"><input type="checkbox" data-kana-char="る"> る</label><label class="kana-chip"><input type="checkbox" data-kana-char="れ"> れ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ろ"> ろ</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="wa">WA</button><label class="kana-chip"><input type="checkbox" data-kana-char="わ"> わ</label><label class="kana-chip"><input type="checkbox" data-kana-char="を"> を</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="n">N</button><label class="kana-chip"><input type="checkbox" data-kana-char="ん"> ん</label></div></div></div>
+  <div class="set-section"><div class="set-label">Dakuten</div><div class="kana-groups"><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ga">GA</button><label class="kana-chip"><input type="checkbox" data-kana-char="が"> が</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぎ"> ぎ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぐ"> ぐ</label><label class="kana-chip"><input type="checkbox" data-kana-char="げ"> げ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ご"> ご</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="za">ZA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ざ"> ざ</label><label class="kana-chip"><input type="checkbox" data-kana-char="じ"> じ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ず"> ず</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぜ"> ぜ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぞ"> ぞ</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="da">DA</button><label class="kana-chip"><input type="checkbox" data-kana-char="だ"> だ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぢ"> ぢ</label><label class="kana-chip"><input type="checkbox" data-kana-char="づ"> づ</label><label class="kana-chip"><input type="checkbox" data-kana-char="で"> で</label><label class="kana-chip"><input type="checkbox" data-kana-char="ど"> ど</label></div><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ba">BA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ば"> ば</label><label class="kana-chip"><input type="checkbox" data-kana-char="び"> び</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぶ"> ぶ</label><label class="kana-chip"><input type="checkbox" data-kana-char="べ"> べ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぼ"> ぼ</label></div></div></div>
+  <div class="set-section"><div class="set-label">Handakuten</div><div class="kana-groups"><div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="pa">PA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ぱ"> ぱ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぴ"> ぴ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぷ"> ぷ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぺ"> ぺ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぽ"> ぽ</label></div></div></div>
+
+  <div class="set-section">
+   <div class="set-label">Digraphs / Yōon</div>
+   <div class="kana-groups">
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="kya">KYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="きゃ"> きゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="きゅ"> きゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="きょ"> きょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="sha">SHA</button><label class="kana-chip"><input type="checkbox" data-kana-char="しゃ"> しゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="しゅ"> しゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="しょ"> しょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="cha">CHA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ちゃ"> ちゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ちゅ"> ちゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ちょ"> ちょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="nya">NYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="にゃ"> にゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="にゅ"> にゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="にょ"> にょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="hya">HYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ひゃ"> ひゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ひゅ"> ひゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ひょ"> ひょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="mya">MYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="みゃ"> みゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="みゅ"> みゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="みょ"> みょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="rya">RYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="りゃ"> りゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="りゅ"> りゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="りょ"> りょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="gya">GYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ぎゃ"> ぎゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぎゅ"> ぎゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぎょ"> ぎょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="ja">JA</button><label class="kana-chip"><input type="checkbox" data-kana-char="じゃ"> じゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="じゅ"> じゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="じょ"> じょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="bya">BYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="びゃ"> びゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="びゅ"> びゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="びょ"> びょ</label></div>
+    <div class="kana-row"><button type="button" class="row-toggle" data-row-toggle="pya">PYA</button><label class="kana-chip"><input type="checkbox" data-kana-char="ぴゃ"> ぴゃ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぴゅ"> ぴゅ</label><label class="kana-chip"><input type="checkbox" data-kana-char="ぴょ"> ぴょ</label></div>
+   </div>
+  </div>
+  <div class="set-actions"><button id="selectAllKana" type="button">Select All</button><button id="clearAllKana" type="button">Clear All</button></div><div id="selectionSummary" class="selection-summary"></div>
+ </section>
+ <div class="tabs">
+  <button id="paperMode">Romaji → Hiragana</button>
+  <button id="typeMode">Hiragana → Romaji</button>
+  <button id="choiceMode">4 Options</button>
+  <button id="wordPaperMode">Words: Write</button>
+  <button id="wordTypeMode">Words: Type</button>
+ </div>
+
+ <section class="card">
+  <div id="instruction" class="instruction"></div>
+  <div id="prompt" class="prompt"></div>
+  <div id="meaning" class="meaning"></div>
+
+  <div id="paperArea" class="area">
+   <div>Write the hiragana on your paper.</div>
+   <button id="reveal" class="primary">Reveal answer</button>
+   <div id="revealed" class="answer"></div>
+  </div>
+
+  <div id="typeArea" class="area hidden">
+   <label for="answer">Type the romaji:</label>
+   <input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. fu">
+   <button id="check" class="primary">Check answer</button>
+   <div id="typeFeedback" class="feedback"></div>
+  </div>
+
+  <div id="choiceArea" class="area hidden">
+   <div>Choose the correct romaji.</div>
+   <div id="choices" class="choices"></div>
+   <div id="choiceFeedback" class="feedback"></div>
+  </div>
+  <div id="wordPaperArea" class="area hidden">
+   <div>Write this word in hiragana on your paper.</div>
+   <button id="wordReveal" class="primary">Reveal answer</button>
+   <div id="wordRevealed" class="answer"></div>
+  </div>
+  <div id="wordTypeArea" class="area hidden">
+   <label for="wordAnswer">Type the romaji for this word:</label>
+   <input id="wordAnswer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. nihongo">
+   <button id="wordCheck" class="primary">Check answer</button>
+   <div id="wordFeedback" class="feedback"></div>
+  </div>
+ </section>
+
+ <div class="controls">
+  <button id="next">Next</button><button id="randomize">Randomize</button><button id="reset">Reset score</button>
+ </div>
+
+ <div class="legend">
+  <b>Basic:</b> あいうえお · かきくけこ · さしすせそ · たちつてと · なにぬねの · はひふへほ · まみむめも · やゆよ · らりるれろ · わを · ん<br>
+  <b>Dakuten:</b> がぎぐげご · ざじずぜぞ · だぢづでど · ばびぶべぼ<br>
+  <b>Handakuten:</b> ぱぴぷぺぽ<br>
+   <b>Digraphs / Yōon:</b> きゃきゅきょ · しゃしゅしょ · ちゃちゅちょ · にゃにゅにょ · ひゃひゅひょ · みゃみゅみょ · りゃりゅりょ · ぎゃぎゅぎょ · じゃじゅじょ · びゃびゅびょ · ぴゃぴゅぴょ
+ </div>
+ <div class="small">For standard beginner romaji: し = shi, ち = chi, つ = tsu, ふ = fu, じ = ji. ぢ and づ are shown as ji and zu.<br><b>806 vocabulary/readings</b> are included in the word bank, including common words, verbs, adjectives, useful expressions, inflected forms, and numbers.</div>
+</main>
+
+<script>
+const kana = [
+['あ','a'],['い','i'],['う','u'],['え','e'],['お','o'],['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko'],
+['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so'],['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to'],
+['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no'],['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho'],
+['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo'],['や','ya'],['ゆ','yu'],['よ','yo'],
+['ら','ra'],['り','ri'],['る','ru'],['れ','re'],['ろ','ro'],['わ','wa'],['を','wo'],['ん','n'],
+['が','ga'],['ぎ','gi'],['ぐ','gu'],['げ','ge'],['ご','go'],['ざ','za'],['じ','ji'],['ず','zu'],['ぜ','ze'],['ぞ','zo'],
+['だ','da'],['ぢ','ji'],['づ','zu'],['で','de'],['ど','do'],['ば','ba'],['び','bi'],['ぶ','bu'],['べ','be'],['ぼ','bo'],
+['ぱ','pa'],['ぴ','pi'],['ぷ','pu'],['ぺ','pe'],['ぽ','po']
+];
+const words = [["ねこ", "neko", "cat"], ["いぬ", "inu", "dog"], ["すし", "sushi", "sushi"], ["かさ", "kasa", "umbrella"], ["たこ", "tako", "octopus"], ["なす", "nasu", "eggplant"], ["そこ", "soko", "there"], ["ここ", "koko", "here"], ["いす", "isu", "chair"], ["あさ", "asa", "morning"], ["あし", "ashi", "foot / leg"], ["うし", "ushi", "cow"], ["しか", "shika", "deer"], ["つき", "tsuki", "moon"], ["すき", "suki", "like / fond of"], ["にく", "niku", "meat"], ["くつ", "kutsu", "shoes"], ["おと", "oto", "sound"], ["うた", "uta", "song"], ["あに", "ani", "older brother"], ["あね", "ane", "older sister"], ["なに", "nani", "what"], ["きのこ", "kinoko", "mushroom"], ["さかな", "sakana", "fish"], ["せかい", "sekai", "world"], ["すこし", "sukoshi", "a little"], ["かぞく", "kazoku", "family"], ["じこ", "jiko", "accident"], ["じかん", "jikan", "time"], ["だいすき", "daisuki", "really like / love"], ["でかい", "dekai", "big (casual)"], ["どこ", "doko", "where"], ["ぜんぜん", "zenzen", "not at all"], ["ぞう", "zou", "elephant"], ["がくせい", "gakusei", "student"], ["はな", "hana", "flower / nose"], ["はこ", "hako", "box"], ["ひと", "hito", "person"], ["ひざ", "hiza", "knee"], ["ふね", "fune", "boat / ship"], ["ふた", "futa", "lid"], ["へた", "heta", "unskilled"], ["ほし", "hoshi", "star"], ["ほね", "hone", "bone"], ["ばか", "baka", "fool / stupid"], ["ぶた", "buta", "pig"], ["ぼく", "boku", "I / me"], ["ぱん", "pan", "bread"], ["ぱぱ", "papa", "dad"], ["まど", "mado", "window"], ["みみ", "mimi", "ear"], ["むし", "mushi", "insect"], ["め", "me", "eye"], ["もも", "momo", "peach"], ["やま", "yama", "mountain"], ["ゆき", "yuki", "snow"], ["よる", "yoru", "night"], ["そら", "sora", "sky"], ["かわ", "kawa", "river / skin"], ["くも", "kumo", "cloud / spider"], ["とり", "tori", "bird"], ["むら", "mura", "village"], ["まち", "machi", "town"], ["みせ", "mise", "store"], ["みち", "michi", "road"], ["くに", "kuni", "country"], ["うみ", "umi", "sea"], ["しま", "shima", "island"], ["もり", "mori", "forest"], ["いけ", "ike", "pond"], ["いし", "ishi", "stone"], ["すな", "suna", "sand"], ["かぜ", "kaze", "wind / cold"], ["あめ", "ame", "rain / candy"], ["こえ", "koe", "voice"], ["かお", "kao", "face"], ["くち", "kuchi", "mouth"], ["は", "ha", "tooth / leaf"], ["て", "te", "hand"], ["ゆび", "yubi", "finger"], ["かみ", "kami", "hair / paper / god"], ["からだ", "karada", "body"], ["こころ", "kokoro", "heart / mind"], ["おなか", "onaka", "stomach"], ["せなか", "senaka", "back"], ["くび", "kubi", "neck"], ["かた", "kata", "shoulder / person"], ["むね", "mune", "chest"], ["こし", "koshi", "waist / lower back"], ["あたま", "atama", "head"], ["おや", "oya", "parent"], ["はは", "haha", "my mother"], ["ちち", "chichi", "my father"], ["あか", "aka", "red"], ["あお", "ao", "blue"], ["しろ", "shiro", "white"], ["くろ", "kuro", "black"], ["いろ", "iro", "color"], ["みず", "mizu", "water"], ["おちゃ", "ocha", "tea"], ["こめ", "kome", "rice (uncooked)"], ["ごはん", "gohan", "meal / cooked rice"], ["たまご", "tamago", "egg"], ["しお", "shio", "salt"], ["さとう", "satou", "sugar"], ["みそ", "miso", "miso"], ["まめ", "mame", "bean"], ["やさい", "yasai", "vegetable"], ["くだもの", "kudamono", "fruit"], ["りんご", "ringo", "apple"], ["みかん", "mikan", "mandarin orange"], ["いちご", "ichigo", "strawberry"], ["ぶどう", "budou", "grape"], ["なし", "nashi", "pear / none"], ["かき", "kaki", "persimmon / oyster / writing"], ["すいか", "suika", "watermelon"], ["ひる", "hiru", "noon / daytime"], ["ばん", "ban", "evening / number"], ["きょう", "kyou", "today"], ["あした", "ashita", "tomorrow"], ["きのう", "kinou", "yesterday"], ["いま", "ima", "now"], ["あと", "ato", "after / later"], ["まえ", "mae", "front / before"], ["うえ", "ue", "above"], ["した", "shita", "below"], ["なか", "naka", "inside"], ["そと", "soto", "outside"], ["みぎ", "migi", "right"], ["ひだり", "hidari", "left"], ["となり", "tonari", "next to"], ["ちかく", "chikaku", "nearby"], ["とおく", "tooku", "far away"], ["どれ", "dore", "which"], ["これ", "kore", "this"], ["それ", "sore", "that"], ["あれ", "are", "that over there"], ["だれ", "dare", "who"], ["いつ", "itsu", "when"], ["なぜ", "naze", "why"], ["どう", "dou", "how"], ["はい", "hai", "yes"], ["いいえ", "iie", "no"], ["ありがとう", "arigatou", "thank you"], ["おはよう", "ohayou", "good morning"], ["さようなら", "sayounara", "goodbye"], ["ごめん", "gomen", "sorry"], ["こんにちは", "konnichiwa", "hello"], ["こんばんは", "konbanwa", "good evening"], ["もしもし", "moshimoshi", "hello (phone)"], ["たべる", "taberu", "to eat"], ["のむ", "nomu", "to drink"], ["みる", "miru", "to see"], ["きく", "kiku", "to listen / ask"], ["いう", "iu", "to say"], ["はなす", "hanasu", "to speak"], ["よむ", "yomu", "to read"], ["かく", "kaku", "to write"], ["いく", "iku", "to go"], ["くる", "kuru", "to come"], ["かえる", "kaeru", "to return"], ["ある", "aru", "to exist (thing)"], ["いる", "iru", "to exist (living thing)"], ["する", "suru", "to do"], ["ねる", "neru", "to sleep"], ["おきる", "okiru", "to wake up"], ["たつ", "tatsu", "to stand"], ["すわる", "suwaru", "to sit"], ["あるく", "aruku", "to walk"], ["はしる", "hashiru", "to run"], ["およぐ", "oyogu", "to swim"], ["あそぶ", "asobu", "to play"], ["まつ", "matsu", "to wait"], ["もつ", "motsu", "to hold"], ["とる", "toru", "to take"], ["おく", "oku", "to put"], ["あける", "akeru", "to open"], ["しめる", "shimeru", "to close"], ["つかう", "tsukau", "to use"], ["つくる", "tsukuru", "to make"], ["かう", "kau", "to buy"], ["うる", "uru", "to sell"], ["あう", "au", "to meet"], ["わかる", "wakaru", "to understand"], ["おもう", "omou", "to think"], ["しる", "shiru", "to know"], ["ならう", "narau", "to learn"], ["おしえる", "oshieru", "to teach"], ["べんきょう", "benkyou", "study"], ["しごと", "shigoto", "work / job"], ["やすむ", "yasumu", "to rest"], ["わらう", "warau", "to laugh"], ["なく", "naku", "to cry"], ["うたう", "utau", "to sing"], ["あらう", "arau", "to wash"], ["きる", "kiru", "to wear / cut"], ["ぬぐ", "nugu", "to take off clothes"], ["つよい", "tsuyoi", "strong"], ["よわい", "yowai", "weak"], ["おおきい", "ookii", "big"], ["ちいさい", "chiisai", "small"], ["たかい", "takai", "high / expensive"], ["やすい", "yasui", "cheap"], ["ながい", "nagai", "long"], ["みじかい", "mijikai", "short"], ["あつい", "atsui", "hot"], ["さむい", "samui", "cold"], ["あたたかい", "atatakai", "warm"], ["すずしい", "suzushii", "cool"], ["あかるい", "akarui", "bright"], ["くらい", "kurai", "dark"], ["はやい", "hayai", "fast / early"], ["おそい", "osoi", "slow / late"], ["おもしろい", "omoshiroi", "interesting"], ["たのしい", "tanoshii", "fun"], ["かなしい", "kanashii", "sad"], ["うれしい", "ureshii", "happy"], ["こわい", "kowai", "scary"], ["かわいい", "kawaii", "cute"], ["おいしい", "oishii", "delicious"], ["まずい", "mazui", "bad tasting"], ["あまい", "amai", "sweet"], ["からい", "karai", "spicy"], ["にがい", "nigai", "bitter"], ["まるい", "marui", "round"], ["わるい", "warui", "bad"], ["いい", "ii", "good"], ["あたらしい", "atarashii", "new"], ["ふるい", "furui", "old"], ["わかい", "wakai", "young"], ["いそがしい", "isogashii", "busy"], ["ひま", "hima", "free time"], ["げんき", "genki", "healthy / energetic"], ["しずか", "shizuka", "quiet"], ["きれい", "kirei", "pretty / clean"], ["ゆうめい", "yuumei", "famous"], ["べんり", "benri", "convenient"], ["たいせつ", "taisetsu", "important"], ["ほん", "hon", "book"], ["つくえ", "tsukue", "desk"], ["えんぴつ", "enpitsu", "pencil"], ["かばん", "kaban", "bag"], ["くるま", "kuruma", "car"], ["でんしゃ", "densha", "train"], ["えき", "eki", "station"], ["みなみ", "minami", "south"], ["きた", "kita", "north"], ["ひがし", "higashi", "east"], ["にし", "nishi", "west"], ["がっこう", "gakkou", "school"], ["せんせい", "sensei", "teacher"], ["ともだち", "tomodachi", "friend"], ["こども", "kodomo", "child"], ["おとな", "otona", "adult"], ["おとこ", "otoko", "man"], ["おんな", "onna", "woman"], ["なまえ", "namae", "name"], ["ことば", "kotoba", "word / language"], ["にほん", "nihon", "Japan"], ["にほんご", "nihongo", "Japanese language"], ["えいご", "eigo", "English language"], ["でんわ", "denwa", "telephone"], ["てがみ", "tegami", "letter"], ["しゃしん", "shashin", "photo"], ["え", "e", "picture"], ["おかね", "okane", "money"], ["いえ", "ie", "house"], ["へや", "heya", "room"], ["にわ", "niwa", "garden"], ["とびら", "tobira", "door"], ["かぎ", "kagi", "key"], ["でんき", "denki", "electricity / light"], ["とけい", "tokei", "clock / watch"], ["ふく", "fuku", "clothes"], ["ぼうし", "boushi", "hat"], ["くつした", "kutsushita", "socks"], ["いち", "ichi", "one"], ["に", "ni", "two"], ["さん", "san", "three"], ["よん", "yon", "four"], ["ご", "go", "five"], ["ろく", "roku", "six"], ["なな", "nana", "seven"], ["はち", "hachi", "eight"], ["きゅう", "kyuu", "nine"], ["じゅう", "juu", "ten"], ["いちにち", "ichinichi", "one day / all day"], ["まいにち", "mainichi", "every day"], ["まいあさ", "maiasa", "every morning"], ["まいばん", "maiban", "every evening"], ["こんしゅう", "konshuu", "this week"], ["らいしゅう", "raishuu", "next week"], ["せんしゅう", "senshuu", "last week"], ["ことし", "kotoshi", "this year"], ["らいねん", "rainen", "next year"], ["きょねん", "kyonen", "last year"], ["じゅういち", "juuichi", "11"], ["じゅうに", "juuni", "12"], ["ひゃく", "hyaku", "hundred"], ["せん", "sen", "thousand"], ["まん", "man", "ten thousand"], ["いちばん", "ichiban", "number one / most"], ["はじめ", "hajime", "beginning"], ["おわり", "owari", "end"], ["はじめる", "hajimeru", "to begin"], ["おわる", "owaru", "to end"], ["つづく", "tsuzuku", "to continue"], ["つづける", "tsuzukeru", "to continue something"], ["とまる", "tomaru", "to stop / stay"], ["とめる", "tomeru", "to stop something"], ["はいる", "hairu", "to enter"], ["でる", "deru", "to exit"], ["のる", "noru", "to ride"], ["おりる", "oriru", "to get off"], ["わたる", "wataru", "to cross"], ["まがる", "magaru", "to turn"], ["うごく", "ugoku", "to move"], ["うごかす", "ugokasu", "to move something"], ["つける", "tsukeru", "to turn on / attach"], ["けす", "kesu", "to erase / turn off"], ["なおす", "naosu", "to fix"], ["なおる", "naoru", "to be fixed / recover"], ["こわれる", "kowareru", "to break"], ["こわす", "kowasu", "to break something"], ["なくす", "nakusu", "to lose"], ["みつける", "mitsukeru", "to find"], ["さがす", "sagasu", "to search"], ["えらぶ", "erabu", "to choose"], ["かりる", "kariru", "to borrow"], ["かす", "kasu", "to lend"], ["おくる", "okuru", "to send"], ["もらう", "morau", "to receive"], ["あげる", "ageru", "to give"], ["くれる", "kureru", "to give (to me/us)"], ["よぶ", "yobu", "to call"], ["こたえる", "kotaeru", "to answer"], ["きめる", "kimeru", "to decide"], ["きまる", "kimaru", "to be decided"], ["てつだう", "tetsudau", "to help"], ["いそぐ", "isogu", "to hurry"], ["おぼえる", "oboeru", "to remember"], ["わすれる", "wasureru", "to forget"], ["かんがえる", "kangaeru", "to think"], ["できる", "dekiru", "can do / be made"], ["ひつよう", "hitsuyou", "necessary"], ["だいじょうぶ", "daijoubu", "okay / all right"], ["ほんとう", "hontou", "truth / really"], ["たぶん", "tabun", "probably"], ["もちろん", "mochiron", "of course"], ["いつも", "itsumo", "always"], ["ときどき", "tokidoki", "sometimes"], ["よく", "yoku", "often / well"], ["あまり", "amari", "not very / remainder"], ["たくさん", "takusan", "many / a lot"], ["もっと", "motto", "more"], ["いっしょ", "issho", "together"], ["ひとり", "hitori", "one person / alone"], ["ふたり", "futari", "two people"], ["みんな", "minna", "everyone"], ["じぶん", "jibun", "oneself"], ["だいがく", "daigaku", "university"], ["こうこう", "koukou", "high school"], ["ちゅうがく", "chuugaku", "middle school"], ["しょうがくせい", "shougakusei", "elementary student"], ["だいがくせい", "daigakusei", "university student"], ["きょうしつ", "kyoushitsu", "classroom"], ["しゅくだい", "shukudai", "homework"], ["しけん", "shiken", "exam"], ["もんだい", "mondai", "problem / question"], ["こたえ", "kotae", "answer"], ["れんしゅう", "renshuu", "practice"], ["じしょ", "jisho", "dictionary"], ["ぶんぽう", "bunpou", "grammar"], ["かんじ", "kanji", "kanji"], ["ひらがな", "hiragana", "hiragana"], ["かたかな", "katakana", "katakana"], ["ぶん", "bun", "sentence"], ["いみ", "imi", "meaning"], ["はつおん", "hatsuon", "pronunciation"], ["おんがく", "ongaku", "music"], ["えいが", "eiga", "movie"], ["げーむ", "geemu", "game"], ["まんが", "manga", "manga"], ["あにめ", "anime", "anime"], ["りょうり", "ryouri", "cooking / cuisine"], ["りょこう", "ryokou", "travel"], ["うんどう", "undou", "exercise"], ["さんぽ", "sanpo", "walk / stroll"], ["やきゅう", "yakyuu", "baseball"], ["さっかー", "sakkaa", "soccer"], ["てんき", "tenki", "weather"], ["たいよう", "taiyou", "sun"], ["ほしぞら", "hoshizora", "starry sky"], ["あおぞら", "aozora", "blue sky"], ["たいふう", "taifuu", "typhoon"], ["かみなり", "kaminari", "thunder"], ["はる", "haru", "spring"], ["なつ", "natsu", "summer"], ["あき", "aki", "autumn"], ["ふゆ", "fuyu", "winter"], ["あつさ", "atsusa", "heat"], ["さむさ", "samusa", "coldness"], ["おんど", "ondo", "temperature"], ["びょういん", "byouin", "hospital"], ["いしゃ", "isha", "doctor"], ["くすり", "kusuri", "medicine"], ["びょうき", "byouki", "illness"], ["けが", "kega", "injury"], ["いたい", "itai", "painful"], ["いたみ", "itami", "pain"], ["ねつ", "netsu", "fever / heat"], ["せき", "seki", "cough"], ["けんこう", "kenkou", "health"], ["げんきになる", "genkininaru", "to get well"], ["ぎんこう", "ginkou", "bank"], ["ゆうびんきょく", "yuubinkyoku", "post office"], ["こうえん", "kouen", "park"], ["としょかん", "toshokan", "library"], ["えいがかん", "eigakan", "movie theater"], ["れすとらん", "resutoran", "restaurant"], ["ほてる", "hoteru", "hotel"], ["くうこう", "kuukou", "airport"], ["ちかてつ", "chikatetsu", "subway"], ["ばす", "basu", "bus"], ["じてんしゃ", "jitensha", "bicycle"], ["ひこうき", "hikouki", "airplane"], ["きっぷ", "kippu", "ticket"], ["にもつ", "nimotsu", "luggage"], ["ちず", "chizu", "map"], ["じゅうしょ", "juusho", "address"], ["ばしょ", "basho", "place"], ["しょくどう", "shokudou", "cafeteria"], ["だいどころ", "daidokoro", "kitchen"], ["おふろ", "ofuro", "bath"], ["といれ", "toire", "toilet"], ["げんかん", "genkan", "entrance"], ["かいだん", "kaidan", "stairs"], ["ゆか", "yuka", "floor"], ["かべ", "kabe", "wall"], ["やね", "yane", "roof"], ["べっど", "beddo", "bed"], ["ふとん", "futon", "futon"], ["れいぞうこ", "reizouko", "refrigerator"], ["せんたくき", "sentakuki", "washing machine"], ["てれび", "terebi", "television"], ["ぱそこん", "pasokon", "computer"], ["けいたい", "keitai", "mobile phone"], ["かめら", "kamera", "camera"], ["めがね", "megane", "glasses"], ["さいふ", "saifu", "wallet"], ["てぶくろ", "tebukuro", "gloves"], ["うわぎ", "uwagi", "jacket"], ["ずぼん", "zubon", "pants"], ["しゃつ", "shatsu", "shirt"], ["すかーと", "sukaato", "skirt"], ["あさごはん", "asagohan", "breakfast"], ["ひるごはん", "hirugohan", "lunch"], ["ばんごはん", "bangohan", "dinner"], ["のみもの", "nomimono", "drink"], ["たべもの", "tabemono", "food"], ["ぎゅうにゅう", "gyuunyuu", "milk"], ["こうちゃ", "koucha", "black tea"], ["こーひー", "koohii", "coffee"], ["じゅーす", "juusu", "juice"], ["びーる", "biiru", "beer"], ["さけ", "sake", "alcohol / sake"], ["にわとり", "niwatori", "chicken"], ["ぶたにく", "butaniku", "pork"], ["ぎゅうにく", "gyuuniku", "beef"], ["とりにく", "toriniku", "chicken meat"], ["やきにく", "yakiniku", "grilled meat"], ["らーめん", "raamen", "ramen"], ["うどん", "udon", "udon"], ["そば", "soba", "soba"], ["おにぎり", "onigiri", "rice ball"], ["みそしる", "misoshiru", "miso soup"], ["とうふ", "toufu", "tofu"], ["のり", "nori", "seaweed"], ["にんじん", "ninjin", "carrot"], ["たまねぎ", "tamanegi", "onion"], ["じゃがいも", "jagaimo", "potato"], ["きゅうり", "kyuuri", "cucumber"], ["とまと", "tomato", "tomato"], ["きゃべつ", "kyabetsu", "cabbage"], ["ばなな", "banana", "banana"], ["れもん", "remon", "lemon"], ["おれんじ", "orenji", "orange"], ["けーき", "keeki", "cake"], ["あいす", "aisu", "ice cream"], ["ちょこれーと", "chokoreeto", "chocolate"], ["あかちゃん", "akachan", "baby"], ["おにいさん", "oniisan", "older brother / young man"], ["おねえさん", "oneesan", "older sister / young woman"], ["おとうさん", "otousan", "father"], ["おかあさん", "okaasan", "mother"], ["おじいさん", "ojiisan", "grandfather / elderly man"], ["おばあさん", "obaasan", "grandmother / elderly woman"], ["きょうだい", "kyoudai", "siblings"], ["あにき", "aniki", "older brother (informal)"], ["いもうと", "imouto", "younger sister"], ["おとうと", "otouto", "younger brother"], ["おっと", "otto", "husband"], ["つま", "tsuma", "wife"], ["けっこん", "kekkon", "marriage"], ["たんじょうび", "tanjoubi", "birthday"], ["ぷれぜんと", "purezento", "present / gift"], ["ぱーてぃー", "paatii", "party"], ["やくそく", "yakusoku", "promise / appointment"], ["でーと", "deeto", "date"], ["あい", "ai", "love"], ["こい", "koi", "romantic love"], ["きもち", "kimochi", "feeling"], ["きぶん", "kibun", "mood"], ["しあわせ", "shiawase", "happiness"], ["ゆめ", "yume", "dream"], ["きぼう", "kibou", "hope"], ["ちから", "chikara", "strength / power"], ["ゆうき", "yuuki", "courage"], ["じゆう", "jiyuu", "freedom"], ["へいわ", "heiwa", "peace"], ["せいかつ", "seikatsu", "life / lifestyle"], ["じんせい", "jinsei", "life"], ["みらい", "mirai", "future"], ["かこ", "kako", "past"], ["げんざい", "genzai", "present"], ["しゃかい", "shakai", "society"], ["ぶんか", "bunka", "culture"], ["れきし", "rekishi", "history"], ["かがく", "kagaku", "science"], ["すうがく", "suugaku", "mathematics"], ["ぎじゅつ", "gijutsu", "technology / skill"], ["じょうほう", "jouhou", "information"], ["しすてむ", "shisutemu", "system"], ["たべます", "tabemasu", "eat (polite)"], ["たべない", "tabenai", "not eat"], ["たべた", "tabeta", "eat (past)"], ["たべました", "tabemashita", "eat (polite past)"], ["みます", "mimasu", "see (polite)"], ["みない", "minai", "not see"], ["みた", "mita", "see (past)"], ["みました", "mimashita", "see (polite past)"], ["ねます", "nemasu", "sleep (polite)"], ["ねない", "nenai", "not sleep"], ["ねた", "neta", "sleep (past)"], ["ねました", "nemashita", "sleep (polite past)"], ["おきます", "okimasu", "wake up (polite)"], ["おきない", "okinai", "not wake up"], ["おきた", "okita", "wake up (past)"], ["おきました", "okimashita", "wake up (polite past)"], ["あけます", "akemasu", "open (polite)"], ["あけない", "akenai", "not open"], ["あけた", "aketa", "open (past)"], ["あけました", "akemashita", "open (polite past)"], ["しめます", "shimemasu", "close (polite)"], ["しめない", "shimenai", "not close"], ["しめた", "shimeta", "close (past)"], ["しめました", "shimemashita", "close (polite past)"], ["おしえます", "oshiemasu", "teach (polite)"], ["おしえない", "oshienai", "not teach"], ["おしえた", "oshieta", "teach (past)"], ["おしえました", "oshiemashita", "teach (polite past)"], ["おぼえます", "oboemasu", "remember (polite)"], ["おぼえない", "oboenai", "not remember"], ["おぼえた", "oboeta", "remember (past)"], ["おぼえました", "oboemashita", "remember (polite past)"], ["わすれます", "wasuremasu", "forget (polite)"], ["わすれない", "wasurenai", "not forget"], ["わすれた", "wasureta", "forget (past)"], ["わすれました", "wasuremashita", "forget (polite past)"], ["かんがえます", "kangaemasu", "think (polite)"], ["かんがえない", "kangaenai", "not think"], ["かんがえた", "kangaeta", "think (past)"], ["かんがえました", "kangaemashita", "think (polite past)"], ["でます", "demasu", "exit (polite)"], ["でない", "denai", "not exit"], ["でた", "deta", "exit (past)"], ["でました", "demashita", "exit (polite past)"], ["おります", "orimasu", "get off (polite)"], ["おりない", "orinai", "not get off"], ["おりた", "orita", "get off (past)"], ["おりました", "orimashita", "get off (polite past)"], ["いきます", "ikimasu", "go (polite)"], ["いかない", "ikanai", "not go"], ["いいた", "iita", "go (past)"], ["かきます", "kakimasu", "write (polite)"], ["かかない", "kakanai", "not write"], ["かいた", "kaita", "write (past)"], ["ききます", "kikimasu", "listen / ask (polite)"], ["きかない", "kikanai", "not listen / ask"], ["きいた", "kiita", "listen / ask (past)"], ["あるきます", "arukimasu", "walk (polite)"], ["あるかない", "arukanai", "not walk"], ["あるいた", "aruita", "walk (past)"], ["はたらく", "hataraku", "to work"], ["はたらきます", "hatarakimasu", "work (polite)"], ["はたらかない", "hatarakanai", "not work"], ["はたらいた", "hataraita", "work (past)"], ["のみます", "nomimasu", "drink (polite)"], ["のまない", "nomanai", "not drink"], ["のんだ", "nonda", "drink (past)"], ["よみます", "yomimasu", "read (polite)"], ["よまない", "yomanai", "not read"], ["よんだ", "yonda", "call (past)"], ["やすみます", "yasumimasu", "rest (polite)"], ["やすまない", "yasumanai", "not rest"], ["やすんだ", "yasunda", "rest (past)"], ["あそびます", "asobimasu", "play (polite)"], ["あそばない", "asobanai", "not play"], ["あそんだ", "asonda", "play (past)"], ["よびます", "yobimasu", "call (polite)"], ["よばない", "yobanai", "not call"], ["はなします", "hanashimasu", "speak (polite)"], ["はなさない", "hanasanai", "not speak"], ["はなした", "hanashita", "speak (past)"], ["けします", "keshimasu", "erase / turn off (polite)"], ["けさない", "kesanai", "not erase / turn off"], ["けした", "keshita", "erase / turn off (past)"], ["さがします", "sagashimasu", "search (polite)"], ["さがさない", "sagasanai", "not search"], ["さがした", "sagashita", "search (past)"], ["まちます", "machimasu", "wait (polite)"], ["またない", "matanai", "not wait"], ["まった", "matta", "wait (past)"], ["もちます", "mochimasu", "hold (polite)"], ["もたない", "motanai", "not hold"], ["もった", "motta", "hold (past)"], ["たちます", "tachimasu", "stand (polite)"], ["たたない", "tatanai", "not stand"], ["たった", "tatta", "stand (past)"], ["かいます", "kaimasu", "buy (polite)"], ["かわない", "kawanai", "not buy"], ["かった", "katta", "buy (past)"], ["あいます", "aimasu", "meet (polite)"], ["あわない", "awanai", "not meet"], ["あった", "atta", "meet (past)"], ["うたいます", "utaimasu", "sing (polite)"], ["うたわない", "utawanai", "not sing"], ["うたった", "utatta", "sing (past)"], ["ならいます", "naraimasu", "learn (polite)"], ["ならわない", "narawanai", "not learn"], ["ならった", "naratta", "learn (past)"], ["かえります", "kaerimasu", "return (polite)"], ["かえらない", "kaeranai", "not return"], ["かえった", "kaetta", "return (past)"], ["はしります", "hashirimasu", "run (polite)"], ["はしらない", "hashiranai", "not run"], ["はしった", "hashitta", "run (past)"], ["わかります", "wakarimasu", "understand (polite)"], ["わからない", "wakaranai", "not understand"], ["わかった", "wakatta", "understand (past)"], ["おおきくない", "ookikunai", "not big"], ["おおきかった", "ookikatta", "big (past)"], ["おおきくて", "ookikute", "big (te-form)"], ["ちいさくない", "chiisakunai", "not small"], ["ちいさかった", "chiisakatta", "small (past)"], ["ちいさくて", "chiisakute", "small (te-form)"], ["たかくない", "takakunai", "not high / expensive"], ["たかかった", "takakatta", "high / expensive (past)"], ["たかくて", "takakute", "high / expensive (te-form)"], ["やすくない", "yasukunai", "not cheap"], ["やすかった", "yasukatta", "cheap (past)"], ["やすくて", "yasukute", "cheap (te-form)"], ["ながくない", "nagakunai", "not long"], ["ながかった", "nagakatta", "long (past)"], ["ながくて", "nagakute", "long (te-form)"], ["みじかくない", "mijikakunai", "not short"], ["みじかかった", "mijikakatta", "short (past)"], ["みじかくて", "mijikakute", "short (te-form)"], ["あつくない", "atsukunai", "not hot"], ["あつかった", "atsukatta", "hot (past)"], ["あつくて", "atsukute", "hot (te-form)"], ["さむくない", "samukunai", "not cold"], ["さむかった", "samukatta", "cold (past)"], ["さむくて", "samukute", "cold (te-form)"], ["はやくない", "hayakunai", "not fast / early"], ["はやかった", "hayakatta", "fast / early (past)"], ["はやくて", "hayakute", "fast / early (te-form)"], ["おそくない", "osokunai", "not slow / late"], ["おそかった", "osokatta", "slow / late (past)"], ["おそくて", "osokute", "slow / late (te-form)"], ["つよくない", "tsuyokunai", "not strong"], ["つよかった", "tsuyokatta", "strong (past)"], ["つよくて", "tsuyokute", "strong (te-form)"], ["よわくない", "yowakunai", "not weak"], ["よわかった", "yowakatta", "weak (past)"], ["よわくて", "yowakute", "weak (te-form)"], ["あまくない", "amakunai", "not sweet"], ["あまかった", "amakatta", "sweet (past)"], ["あまくて", "amakute", "sweet (te-form)"], ["からくない", "karakunai", "not spicy"], ["からかった", "karakatta", "spicy (past)"], ["からくて", "karakute", "spicy (te-form)"], ["にがくない", "nigakunai", "not bitter"], ["にがかった", "nigakatta", "bitter (past)"], ["にがくて", "nigakute", "bitter (te-form)"], ["わるくない", "warukunai", "not bad"], ["わるかった", "warukatta", "bad (past)"], ["わるくて", "warukute", "bad (te-form)"], ["あたらしくない", "atarashikunai", "not new"], ["あたらしかった", "atarashikatta", "new (past)"], ["あたらしくて", "atarashikute", "new (te-form)"], ["ふるくない", "furukunai", "not old"], ["ふるかった", "furukatta", "old (past)"], ["ふるくて", "furukute", "old (te-form)"], ["わかくない", "wakakunai", "not young"], ["わかかった", "wakakatta", "young (past)"], ["わかくて", "wakakute", "young (te-form)"], ["たのしくない", "tanoshikunai", "not fun"], ["たのしかった", "tanoshikatta", "fun (past)"], ["たのしくて", "tanoshikute", "fun (te-form)"], ["かなしくない", "kanashikunai", "not sad"], ["かなしかった", "kanashikatta", "sad (past)"], ["かなしくて", "kanashikute", "sad (te-form)"], ["うれしくない", "ureshikunai", "not happy"], ["うれしかった", "ureshikatta", "happy (past)"], ["うれしくて", "ureshikute", "happy (te-form)"], ["おいしくない", "oishikunai", "not delicious"], ["おいしかった", "oishikatta", "delicious (past)"], ["おいしくて", "oishikute", "delicious (te-form)"], ["じゅうさん", "juusan", "13"], ["じゅうよん", "juuyon", "14"], ["じゅうご", "juugo", "15"], ["じゅうろく", "juuroku", "16"], ["じゅうなな", "juunana", "17"], ["じゅうはち", "juuhachi", "18"], ["じゅうきゅう", "juukyuu", "19"], ["にじゅう", "nijuu", "20"], ["にじゅういち", "nijuuichi", "21"], ["にじゅうに", "nijuuni", "22"], ["にじゅうさん", "nijuusan", "23"], ["にじゅうよん", "nijuuyon", "24"], ["にじゅうご", "nijuugo", "25"], ["にじゅうろく", "nijuuroku", "26"], ["にじゅうなな", "nijuunana", "27"], ["にじゅうはち", "nijuuhachi", "28"], ["にじゅうきゅう", "nijuukyuu", "29"], ["さんじゅう", "sanjuu", "30"], ["さんじゅういち", "sanjuuichi", "31"], ["さんじゅうに", "sanjuuni", "32"], ["さんじゅうさん", "sanjuusan", "33"], ["さんじゅうよん", "sanjuuyon", "34"], ["さんじゅうご", "sanjuugo", "35"], ["さんじゅうろく", "sanjuuroku", "36"], ["さんじゅうなな", "sanjuunana", "37"], ["さんじゅうはち", "sanjuuhachi", "38"], ["さんじゅうきゅう", "sanjuukyuu", "39"], ["よんじゅう", "yonjuu", "40"], ["よんじゅういち", "yonjuuichi", "41"], ["よんじゅうに", "yonjuuni", "42"], ["よんじゅうさん", "yonjuusan", "43"], ["よんじゅうよん", "yonjuuyon", "44"], ["よんじゅうご", "yonjuugo", "45"], ["よんじゅうろく", "yonjuuroku", "46"], ["よんじゅうなな", "yonjuunana", "47"], ["よんじゅうはち", "yonjuuhachi", "48"], ["よんじゅうきゅう", "yonjuukyuu", "49"], ["ごじゅう", "gojuu", "50"], ["ごじゅういち", "gojuuichi", "51"], ["ごじゅうに", "gojuuni", "52"], ["ごじゅうさん", "gojuusan", "53"], ["ごじゅうよん", "gojuuyon", "54"], ["ごじゅうご", "gojuugo", "55"], ["ごじゅうろく", "gojuuroku", "56"], ["ごじゅうなな", "gojuunana", "57"], ["ごじゅうはち", "gojuuhachi", "58"], ["ごじゅうきゅう", "gojuukyuu", "59"], ["ろくじゅう", "rokujuu", "60"], ["ろくじゅういち", "rokujuuichi", "61"], ["ろくじゅうに", "rokujuuni", "62"], ["ろくじゅうさん", "rokujuusan", "63"], ["ろくじゅうよん", "rokujuuyon", "64"], ["ろくじゅうご", "rokujuugo", "65"], ["ろくじゅうろく", "rokujuuroku", "66"], ["ろくじゅうなな", "rokujuunana", "67"], ["ろくじゅうはち", "rokujuuhachi", "68"], ["ろくじゅうきゅう", "rokujuukyuu", "69"], ["ななじゅう", "nanajuu", "70"], ["ななじゅういち", "nanajuuichi", "71"], ["ななじゅうに", "nanajuuni", "72"], ["ななじゅうさん", "nanajuusan", "73"], ["ななじゅうよん", "nanajuuyon", "74"], ["ななじゅうご", "nanajuugo", "75"], ["ななじゅうろく", "nanajuuroku", "76"], ["ななじゅうなな", "nanajuunana", "77"], ["ななじゅうはち", "nanajuuhachi", "78"], ["ななじゅうきゅう", "nanajuukyuu", "79"], ["はちじゅう", "hachijuu", "80"], ["はちじゅういち", "hachijuuichi", "81"], ["はちじゅうに", "hachijuuni", "82"], ["はちじゅうさん", "hachijuusan", "83"], ["はちじゅうよん", "hachijuuyon", "84"], ["はちじゅうご", "hachijuugo", "85"], ["はちじゅうろく", "hachijuuroku", "86"], ["はちじゅうなな", "hachijuunana", "87"], ["はちじゅうはち", "hachijuuhachi", "88"], ["はちじゅうきゅう", "hachijuukyuu", "89"], ["きゅうじゅう", "kyuujuu", "90"], ["きゅうじゅういち", "kyuujuuichi", "91"], ["きゅうじゅうに", "kyuujuuni", "92"], ["きゅうじゅうさん", "kyuujuusan", "93"], ["きゅうじゅうよん", "kyuujuuyon", "94"], ["きゅうじゅうご", "kyuujuugo", "95"], ["きゅうじゅうろく", "kyuujuuroku", "96"], ["きゅうじゅうなな", "kyuujuunana", "97"], ["きゅうじゅうはち", "kyuujuuhachi", "98"], ["きゅうじゅうきゅう", "kyuujuukyuu", "99"]];
+
+const KANA_GROUPS={
+ a:['あ','い','う','え','お'],ka:['か','き','く','け','こ'],sa:['さ','し','す','せ','そ'],ta:['た','ち','つ','て','と'],na:['な','に','ぬ','ね','の'],
+ ha:['は','ひ','ふ','へ','ほ'],ma:['ま','み','む','め','も'],ya:['や','ゆ','よ'],ra:['ら','り','る','れ','ろ'],wa:['わ','を'],n:['ん'],
+ ga:['が','ぎ','ぐ','げ','ご'],za:['ざ','じ','ず','ぜ','ぞ'],da:['だ','ぢ','づ','で','ど'],ba:['ば','び','ぶ','べ','ぼ'],pa:['ぱ','ぴ','ぷ','ぺ','ぽ'],
+ kya:['きゃ','きゅ','きょ'],sha:['しゃ','しゅ','しょ'],cha:['ちゃ','ちゅ','ちょ'],nya:['にゃ','にゅ','にょ'],hya:['ひゃ','ひゅ','ひょ'],mya:['みゃ','みゅ','みょ'],rya:['りゃ','りゅ','りょ'],
+ gya:['ぎゃ','ぎゅ','ぎょ'],ja:['じゃ','じゅ','じょ'],bya:['びゃ','びゅ','びょ'],pya:['ぴゃ','ぴゅ','ぴょ']
+};
+const BASIC_GROUPS=['a','ka','sa','ta','na','ha','ma','ya','ra','wa','n'];
+const DAKUTEN_GROUPS=['ga','za','da','ba'];
+const HANDAKUTEN_GROUPS=['pa'];
+const DIGRAPH_GROUPS=['kya','sha','cha','nya','hya','mya','rya','gya','ja','bya','pya'];
+
+const BASIC_KANA=BASIC_GROUPS.flatMap(g=>KANA_GROUPS[g]);
+const DAKUTEN_KANA=DAKUTEN_GROUPS.flatMap(g=>KANA_GROUPS[g]);
+const HANDAKUTEN_KANA=HANDAKUTEN_GROUPS.flatMap(g=>KANA_GROUPS[g]);
+const DIGRAPHS=DIGRAPH_GROUPS.flatMap(g=>KANA_GROUPS[g]);
+
+const DIGRAPH_ROMAJI={
+ 'きゃ':'kya','きゅ':'kyu','きょ':'kyo',
+ 'しゃ':'sha','しゅ':'shu','しょ':'sho',
+ 'ちゃ':'cha','ちゅ':'chu','ちょ':'cho',
+ 'にゃ':'nya','にゅ':'nyu','にょ':'nyo',
+ 'ひゃ':'hya','ひゅ':'hyu','ひょ':'hyo',
+ 'みゃ':'mya','みゅ':'myu','みょ':'myo',
+ 'りゃ':'rya','りゅ':'ryu','りょ':'ryo',
+ 'ぎゃ':'gya','ぎゅ':'gyu','ぎょ':'gyo',
+ 'じゃ':'ja','じゅ':'ju','じょ':'jo',
+ 'びゃ':'bya','びゅ':'byu','びょ':'byo',
+ 'ぴゃ':'pya','ぴゅ':'pyu','ぴょ':'pyo'
+};
+const DIGRAPH_ITEMS=DIGRAPHS.map(k=>[k,DIGRAPH_ROMAJI[k]]);
+const DIGRAPH_SET=new Set(DIGRAPHS);
+
+// "All Basic" stays basic only. "All Kana" includes every old kana plus yōon.
+const ALL_KANA=[...BASIC_KANA,...DAKUTEN_KANA,...HANDAKUTEN_KANA,...DIGRAPHS];
+const SELECTION_KEY='hiragana-practice-my-selection-v2';
+
+function loadMySelection(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(SELECTION_KEY)||'null');
+  if(Array.isArray(saved))return saved.filter(k=>ALL_KANA.includes(k));
+ }catch(e){}
+ return [...ALL_KANA];
+}
+let mySelection=loadMySelection(),activeKana=[...mySelection];
+
+function saveMySelection(){localStorage.setItem(SELECTION_KEY,JSON.stringify(mySelection))}
+function selectedKanaSet(){return new Set(activeKana)}
+
+// Individual practice treats every selected yōon as ONE practice item.
+function selectedKanaPool(){
+ const allowed=selectedKanaSet();
+ return [...kana,...DIGRAPH_ITEMS].filter(([unit])=>allowed.has(unit));
+}
+
+// Parse valid yōon first. A sequence such as きょう becomes きょ + う.
+// Small ゃ/ゅ/ょ can never pass independently because they are not selectable units.
+function tokenizeWordUnits(word){
+ const units=[];
+ for(let i=0;i<word.length;){
+  const pair=word.slice(i,i+2);
+  if(DIGRAPH_SET.has(pair)){
+   units.push(pair);
+   i+=2;
+  }else{
+   units.push(word[i]);
+   i++;
+  }
+ }
+ return units;
+}
+
+function wordIsEligible(word){
+ const allowed=selectedKanaSet();
+ return tokenizeWordUnits(word).every(unit=>unit==='ん'||allowed.has(unit));
+}
+function eligibleWords(){return words.filter(w=>wordIsEligible(w[0]))}
+
+function syncKanaCheckboxes(){
+ document.querySelectorAll('[data-kana-char]').forEach(cb=>cb.checked=activeKana.includes(cb.dataset.kanaChar));
+}
+
+function countSelected(items){
+ const set=selectedKanaSet();
+ return items.reduce((n,k)=>n+(set.has(k)?1:0),0);
+}
+function updateSelectionSummary(){
+ const available=eligibleWords().length;
+ const basic=countSelected(BASIC_KANA),dakuten=countSelected(DAKUTEN_KANA),handa=countSelected(HANDAKUTEN_KANA),digraph=countSelected(DIGRAPHS);
+ $('#selectionSummary').innerHTML=
+  `<b>Basic:</b> ${basic} / ${BASIC_KANA.length} &nbsp; · &nbsp; `+
+  `<b>Dakuten:</b> ${dakuten} / ${DAKUTEN_KANA.length}<br>`+
+  `<b>Handakuten:</b> ${handa} / ${HANDAKUTEN_KANA.length} &nbsp; · &nbsp; `+
+  `<b>Digraphs:</b> ${digraph} / ${DIGRAPHS.length}<br>`+
+  `<b>Total selected practice items:</b> ${activeKana.length} &nbsp; · &nbsp; <b>Available words:</b> ${available}<br>`+
+  `<span>Word mode always allows ん. Yōon are parsed first as complete units (for example, きょう = きょ + う).</span>`;
+}
+function setActiveKana(chars,{saveAsMy=false,preset='custom'}={}){
+ activeKana=[...new Set(chars.filter(k=>ALL_KANA.includes(k)))];
+ if(saveAsMy){mySelection=[...activeKana];saveMySelection();preset='my'}
+ syncKanaCheckboxes();
+ $('#practicePreset').value=preset;
+ updateSelectionSummary();
+ pick();
+}
+function saveVisibleSelection(){
+ const chars=[...document.querySelectorAll('[data-kana-char]:checked')].map(cb=>cb.dataset.kanaChar);
+ setActiveKana(chars,{saveAsMy:true});
+}
+function toggleRow(key){
+ const row=KANA_GROUPS[key]||[],set=selectedKanaSet(),allOn=row.every(k=>set.has(k));
+ row.forEach(k=>allOn?set.delete(k):set.add(k));
+ setActiveKana([...set],{saveAsMy:true});
+}
+let mode='paper',current=null,score=0,total=0,answered=false,last=-1;
+const $=s=>document.querySelector(s);
+const areas={paper:$('#paperArea'),type:$('#typeArea'),choice:$('#choiceArea'),wordPaper:$('#wordPaperArea'),wordType:$('#wordTypeArea')};
+const prompt=$('#prompt'),input=$('#answer'),revealed=$('#revealed'),tf=$('#typeFeedback'),cf=$('#choiceFeedback'),choices=$('#choices');
+const wInput=$('#wordAnswer'),wFeedback=$('#wordFeedback'),wRevealed=$('#wordRevealed');
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function updateScore(){$('#score').textContent=score;$('#total').textContent=total}
+function clean(){
+ answered=false;revealed.textContent='';tf.textContent='';tf.className='feedback';cf.textContent='';cf.className='feedback';
+ input.value='';choices.innerHTML='';wInput.value='';wFeedback.textContent='';wFeedback.className='feedback';wRevealed.textContent='';
+}
+function pick(){
+ clean();
+ if(mode==='wordPaper'||mode==='wordType'){
+   const pool=eligibleWords();
+   if(!pool.length){current=null;$('#instruction').textContent='Word practice';prompt.textContent='';$('#meaning').innerHTML='<span class="empty-state">No words are available with your current selection. Select more kana.</span>';return}
+   current=pool[Math.floor(Math.random()*pool.length)];
+   if(mode==='wordPaper'){ $('#instruction').textContent=`Read the romaji and write the whole word in hiragana · ${pool.length} eligible words`;prompt.textContent=current[1];$('#meaning').textContent='Meaning: '+current[2];}
+   else{$('#instruction').textContent=`Read the hiragana and type the whole word in romaji · ${pool.length} eligible words`;prompt.textContent=current[0];$('#meaning').textContent='Meaning: '+current[2];setTimeout(()=>wInput.focus(),20)}
+   return;
+ }
+ const pool=selectedKanaPool();
+ if(!pool.length){current=null;$('#instruction').textContent='Kana practice';prompt.textContent='';$('#meaning').innerHTML='<span class="empty-state">No kana selected. Select at least one kana group.</span>';return}
+ let i;do{i=Math.floor(Math.random()*pool.length)}while(pool.length>1&&pool[i][0]===last);current=pool[i];last=current[0];$('#meaning').textContent='';
+ if(mode==='paper'){$('#instruction').textContent='Read the romaji and write the matching hiragana';prompt.textContent=current[1]}
+ else if(mode==='type'){$('#instruction').textContent='Read the hiragana and type its romaji';prompt.textContent=current[0];setTimeout(()=>input.focus(),20)}
+ else{$('#instruction').textContent='Which romaji matches this hiragana?';prompt.textContent=current[0];const all=[...new Set(pool.map(x=>x[1]))].filter(x=>x!==current[1]);const opts=shuffle(shuffle(all).slice(0,3).concat(current[1]));opts.forEach(v=>{const b=document.createElement('button');b.type='button';b.textContent=v;b.addEventListener('click',()=>choose(v));choices.appendChild(b)})}
+}
+function setMode(m){
+ mode=m;Object.entries(areas).forEach(([k,v])=>v.classList.toggle('hidden',k!==m));
+ ['paperMode','typeMode','choiceMode','wordPaperMode','wordTypeMode'].forEach(id=>$('#'+id).classList.remove('active'));
+ const ids={paper:'paperMode',type:'typeMode',choice:'choiceMode',wordPaper:'wordPaperMode',wordType:'wordTypeMode'};$('#'+ids[m]).classList.add('active');pick();
+}
+function checkKana(){
+ if(!current)return;if(answered){pick();return}const v=input.value.trim().toLowerCase().replace(/\s+/g,'');if(!v){tf.textContent='Type an answer first.';tf.className='feedback bad';return}
+ answered=true;total++;if(v===current[1]){score++;tf.textContent='✓ Correct!';tf.className='feedback good'}else{tf.textContent='✗ Correct answer: '+current[1];tf.className='feedback bad'}updateScore();
+}
+function checkWord(){
+ if(!current)return;if(answered){pick();return}const v=wInput.value.trim().toLowerCase().replace(/\s+/g,'');if(!v){wFeedback.textContent='Type an answer first.';wFeedback.className='feedback bad';return}
+ answered=true;total++;if(v===current[1]){score++;wFeedback.textContent='✓ Correct!';wFeedback.className='feedback good'}else{wFeedback.textContent='✗ Correct answer: '+current[1];wFeedback.className='feedback bad'}updateScore();
+}
+function choose(v){if(!current||answered)return;answered=true;total++;const ok=v===current[1];if(ok)score++;cf.textContent=ok?'✓ Correct!':'✗ Correct answer: '+current[1];cf.className='feedback '+(ok?'good':'bad');[...choices.children].forEach(b=>{b.disabled=true;if(b.textContent===current[1])b.classList.add('active')});updateScore()}
+$('#reveal').addEventListener('click',()=>{if(current)revealed.textContent=current[0]});$('#check').addEventListener('click',checkKana);
+input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkKana()}});
+$('#wordReveal').addEventListener('click',()=>{if(current)wRevealed.textContent=current[0]});$('#wordCheck').addEventListener('click',checkWord);
+wInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkWord()}});
+$('#paperMode').addEventListener('click',()=>setMode('paper'));$('#typeMode').addEventListener('click',()=>setMode('type'));$('#choiceMode').addEventListener('click',()=>setMode('choice'));
+$('#wordPaperMode').addEventListener('click',()=>setMode('wordPaper'));$('#wordTypeMode').addEventListener('click',()=>setMode('wordType'));
+document.querySelectorAll('[data-kana-char]').forEach(cb=>cb.addEventListener('change',saveVisibleSelection));
+document.querySelectorAll('[data-row-toggle]').forEach(btn=>btn.addEventListener('click',()=>toggleRow(btn.dataset.rowToggle)));
+$('#practicePreset').addEventListener('change',e=>{const v=e.target.value;if(v==='my')setActiveKana(mySelection,{preset:'my'});else if(v==='basic')setActiveKana(BASIC_KANA,{preset:'basic'});else if(v==='all')setActiveKana(ALL_KANA,{preset:'all'});else setActiveKana(activeKana,{preset:'custom'})});
+$('#selectAllKana').addEventListener('click',()=>setActiveKana(ALL_KANA,{saveAsMy:true}));
+$('#clearAllKana').addEventListener('click',()=>setActiveKana([],{saveAsMy:true}));
+$('#next').addEventListener('click',pick);$('#randomize').addEventListener('click',pick);$('#reset').addEventListener('click',()=>{score=0;total=0;updateScore();pick()});setActiveKana(mySelection,{preset:'my'});setMode('paper');
+</script>
+</body>
+</html>

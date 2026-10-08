@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Japanese Katakana Practice</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#17181c;--muted:#686b73;--border:#dfe1e7;--accent:#5b6cff;--accent2:#eef0ff;--good:#16794b;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:820px;margin:32px auto;padding:0 16px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 5px}.sub{color:var(--muted);font-size:14px}.score{font-weight:700}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
+button,input{font:inherit}button{min-height:44px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);padding:9px 12px;cursor:pointer;font-weight:650}
+button:hover{border-color:#aeb2bd}.active,.primary{background:var(--accent2);border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;text-align:center}
+.instruction{font-size:14px;color:var(--muted)}.prompt{font-size:52px;font-weight:750;padding:18px 0 10px;min-height:90px}
+.meaning{color:var(--muted);font-size:14px;min-height:22px;margin-bottom:12px}.hidden{display:none!important}
+.area{display:grid;gap:12px;justify-items:center}.answer{font-size:48px;font-weight:750;min-height:58px}
+input{width:min(330px,100%);min-height:48px;border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;font-size:19px;background:white;color:var(--text)}
+.choices{width:min(460px,100%);display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choices button{font-size:18px}
+.feedback{min-height:24px;font-weight:700;font-size:14px}.good{color:var(--good)}.bad{color:var(--bad)}
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0}.legend{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;line-height:1.75;text-align:center}
+.small{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+@media(max-width:650px){.tabs{grid-template-columns:1fr 1fr}.tabs button:last-child{grid-column:1/-1}.prompt{font-size:44px}.card{padding:20px 14px}}
+@media(prefers-color-scheme:dark){:root{--bg:#111318;--card:#1a1d24;--text:#f3f4f6;--muted:#a7abb5;--border:#343844;--accent2:#2b315f}button,input{background:#20232b;color:var(--text)}.legend{background:var(--card)}}
+
+.practice-set{margin:16px 0;text-align:left;padding:16px}
+.practice-set-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.practice-set-title{font-weight:800;font-size:13px;letter-spacing:.05em}
+.practice-set select{min-height:40px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text);padding:7px 10px;font:inherit}
+.set-section{margin-top:12px}
+.set-label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+.kana-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:7px 0}
+.row-toggle{min-width:54px;min-height:36px;padding:6px 9px}
+.kana-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:9px;background:var(--card);padding:6px 8px;min-height:36px;cursor:pointer;user-select:none}
+.kana-chip input{width:auto;min-height:0;margin:0}
+.kana-chip:has(input:checked){background:var(--accent2);border-color:var(--accent)}
+.set-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.selection-summary{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.55}
+.selection-summary b{color:var(--text)}
+.empty-state{font-size:15px;color:var(--bad);font-weight:700;padding:12px 0}
+
+</style></head><body><main class="wrap">
+<div class="top"><div><h1>Japanese Katakana Practice</h1><div class="sub">All basic katakana + dakuten + handakuten</div></div><div class="score"><span id="score">0</span> / <span id="total">0</span> correct</div></div>
+
+<section class="card practice-set">
+ <div class="practice-set-head">
+  <div>
+   <div class="practice-set-title">PRACTICE SET</div>
+   <div class="small" style="text-align:left;margin-top:3px">Select only the Katakana you have learned.</div>
+  </div>
+  <select id="practicePreset" aria-label="Practice set preset">
+   <option value="my">My Selection</option>
+   <option value="basic">All Basic</option>
+   <option value="all">All Kana</option>
+   <option value="custom">Custom</option>
+  </select>
+ </div>
+
+ <div class="set-section">
+  <div class="set-label">Basic</div>
+
+  <div class="kana-row" data-row="a">
+   <button class="row-toggle" type="button" data-toggle-row="a">A</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ア">ア</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="イ">イ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ウ">ウ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="エ">エ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="オ">オ</label>
+  </div>
+
+  <div class="kana-row" data-row="ka">
+   <button class="row-toggle" type="button" data-toggle-row="ka">KA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="カ">カ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="キ">キ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ク">ク</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ケ">ケ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="コ">コ</label>
+  </div>
+
+  <div class="kana-row" data-row="sa">
+   <button class="row-toggle" type="button" data-toggle-row="sa">SA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="サ">サ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="シ">シ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ス">ス</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="セ">セ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ソ">ソ</label>
+  </div>
+
+  <div class="kana-row" data-row="ta">
+   <button class="row-toggle" type="button" data-toggle-row="ta">TA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="タ">タ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="チ">チ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ツ">ツ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="テ">テ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ト">ト</label>
+  </div>
+
+  <div class="kana-row" data-row="na">
+   <button class="row-toggle" type="button" data-toggle-row="na">NA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ナ">ナ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ニ">ニ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヌ">ヌ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ネ">ネ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ノ">ノ</label>
+  </div>
+
+  <div class="kana-row" data-row="ha">
+   <button class="row-toggle" type="button" data-toggle-row="ha">HA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ハ">ハ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヒ">ヒ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="フ">フ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヘ">ヘ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ホ">ホ</label>
+  </div>
+
+  <div class="kana-row" data-row="ma">
+   <button class="row-toggle" type="button" data-toggle-row="ma">MA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="マ">マ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ミ">ミ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ム">ム</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="メ">メ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="モ">モ</label>
+  </div>
+
+  <div class="kana-row" data-row="ya">
+   <button class="row-toggle" type="button" data-toggle-row="ya">YA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヤ">ヤ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ユ">ユ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヨ">ヨ</label>
+  </div>
+
+  <div class="kana-row" data-row="ra">
+   <button class="row-toggle" type="button" data-toggle-row="ra">RA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ラ">ラ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="リ">リ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ル">ル</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="レ">レ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ロ">ロ</label>
+  </div>
+
+  <div class="kana-row" data-row="wa">
+   <button class="row-toggle" type="button" data-toggle-row="wa">WA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ワ">ワ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヲ">ヲ</label>
+  </div>
+
+  <div class="kana-row" data-row="n">
+   <button class="row-toggle" type="button" data-toggle-row="n">N</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ン">ン</label>
+  </div>
+ </div>
+
+ <div class="set-section">
+  <div class="set-label">Dakuten</div>
+
+  <div class="kana-row" data-row="ga">
+   <button class="row-toggle" type="button" data-toggle-row="ga">GA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ガ">ガ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ギ">ギ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="グ">グ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ゲ">ゲ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ゴ">ゴ</label>
+  </div>
+
+  <div class="kana-row" data-row="za">
+   <button class="row-toggle" type="button" data-toggle-row="za">ZA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ザ">ザ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ジ">ジ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ズ">ズ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ゼ">ゼ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ゾ">ゾ</label>
+  </div>
+
+  <div class="kana-row" data-row="da">
+   <button class="row-toggle" type="button" data-toggle-row="da">DA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="ダ">ダ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヂ">ヂ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ヅ">ヅ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="デ">デ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ド">ド</label>
+  </div>
+
+  <div class="kana-row" data-row="ba">
+   <button class="row-toggle" type="button" data-toggle-row="ba">BA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="バ">バ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ビ">ビ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ブ">ブ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ベ">ベ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ボ">ボ</label>
+  </div>
+ </div>
+
+ <div class="set-section">
+  <div class="set-label">Handakuten</div>
+  <div class="kana-row" data-row="pa">
+   <button class="row-toggle" type="button" data-toggle-row="pa">PA</button>
+   <label class="kana-chip"><input type="checkbox" data-kana="パ">パ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ピ">ピ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="プ">プ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ペ">ペ</label>
+   <label class="kana-chip"><input type="checkbox" data-kana="ポ">ポ</label>
+  </div>
+ </div>
+
+ <div class="set-actions">
+  <button id="selectAllKana" type="button">Select All</button>
+  <button id="clearAllKana" type="button">Clear All</button>
+ </div>
+
+ <div id="selectionSummary" class="selection-summary"></div>
+</section>
+
+<div class="tabs">
+<button id="paperMode">Romaji → Katakana</button><button id="typeMode">Katakana → Romaji</button><button id="choiceMode">4 Options</button>
+<button id="wordPaperMode">Words: Write</button><button id="wordTypeMode">Words: Type</button>
+</div>
+<section class="card"><div id="instruction" class="instruction"></div><div id="prompt" class="prompt"></div><div id="meaning" class="meaning"></div>
+<div id="paperArea" class="area"><div>Write the katakana on your paper.</div><button id="reveal" class="primary">Reveal answer</button><div id="revealed" class="answer"></div></div>
+<div id="typeArea" class="area hidden"><label for="answer">Type the romaji:</label><input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. fu"><button id="check" class="primary">Check answer</button><div id="typeFeedback" class="feedback"></div></div>
+<div id="choiceArea" class="area hidden"><div>Choose the correct romaji.</div><div id="choices" class="choices"></div><div id="choiceFeedback" class="feedback"></div></div>
+<div id="wordPaperArea" class="area hidden"><div>Write this word in katakana on your paper.</div><button id="wordReveal" class="primary">Reveal answer</button><div id="wordRevealed" class="answer"></div></div>
+<div id="wordTypeArea" class="area hidden"><label for="wordAnswer">Type the romaji for this word:</label><input id="wordAnswer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. kamera"><button id="wordCheck" class="primary">Check answer</button><div id="wordFeedback" class="feedback"></div></div>
+</section>
+<div class="controls"><button id="next">Next</button><button id="randomize">Randomize</button><button id="reset">Reset score</button></div>
+<div class="legend"><b>Basic:</b> アイウエオ · カキクケコ · サシスセソ · タチツテト · ナニヌネノ · ハヒフヘホ · マミムメモ · ヤユヨ · ラリルレロ · ワヲ · ン<br>
+<b>Dakuten:</b> ガギグゲゴ · ザジズゼゾ · ダヂヅデド · バビブベボ<br><b>Handakuten:</b> パピプペポ</div>
+<div class="small">Standard beginner romaji: シ = shi, チ = chi, ツ = tsu, フ = fu, ジ = ji. ヂ and ヅ are shown as ji and zu.<br><b>625 katakana vocabulary/compound readings</b> included.</div>
+</main>
+<script>
+const kana=[["ア", "a"], ["イ", "i"], ["ウ", "u"], ["エ", "e"], ["オ", "o"], ["カ", "ka"], ["キ", "ki"], ["ク", "ku"], ["ケ", "ke"], ["コ", "ko"], ["サ", "sa"], ["シ", "shi"], ["ス", "su"], ["セ", "se"], ["ソ", "so"], ["タ", "ta"], ["チ", "chi"], ["ツ", "tsu"], ["テ", "te"], ["ト", "to"], ["ナ", "na"], ["ニ", "ni"], ["ヌ", "nu"], ["ネ", "ne"], ["ノ", "no"], ["ハ", "ha"], ["ヒ", "hi"], ["フ", "fu"], ["ヘ", "he"], ["ホ", "ho"], ["マ", "ma"], ["ミ", "mi"], ["ム", "mu"], ["メ", "me"], ["モ", "mo"], ["ヤ", "ya"], ["ユ", "yu"], ["ヨ", "yo"], ["ラ", "ra"], ["リ", "ri"], ["ル", "ru"], ["レ", "re"], ["ロ", "ro"], ["ワ", "wa"], ["ヲ", "wo"], ["ン", "n"], ["ガ", "ga"], ["ギ", "gi"], ["グ", "gu"], ["ゲ", "ge"], ["ゴ", "go"], ["ザ", "za"], ["ジ", "ji"], ["ズ", "zu"], ["ゼ", "ze"], ["ゾ", "zo"], ["ダ", "da"], ["ヂ", "ji"], ["ヅ", "zu"], ["デ", "de"], ["ド", "do"], ["バ", "ba"], ["ビ", "bi"], ["ブ", "bu"], ["ベ", "be"], ["ボ", "bo"], ["パ", "pa"], ["ピ", "pi"], ["プ", "pu"], ["ペ", "pe"], ["ポ", "po"]];
+const words=[["パン", "pan", "bread"], ["バス", "basu", "bus"], ["ホテル", "hoteru", "hotel"], ["テレビ", "terebi", "television"], ["ラジオ", "rajio", "radio"], ["カメラ", "kamera", "camera"], ["パソコン", "pasokon", "computer"], ["スマホ", "sumaho", "smartphone"], ["ゲーム", "geemu", "game"], ["アニメ", "anime", "anime"], ["マンガ", "manga", "manga"], ["コーヒー", "koohii", "coffee"], ["ジュース", "juusu", "juice"], ["ビール", "biiru", "beer"], ["ワイン", "wain", "wine"], ["ミルク", "miruku", "milk"], ["チーズ", "chiizu", "cheese"], ["バター", "bataa", "butter"], ["ケーキ", "keeki", "cake"], ["アイス", "aisu", "ice cream"], ["チョコレート", "chokoreeto", "chocolate"], ["クッキー", "kukkii", "cookie"], ["サラダ", "sarada", "salad"], ["スープ", "suupu", "soup"], ["カレー", "karee", "curry"], ["パスタ", "pasuta", "pasta"], ["ピザ", "piza", "pizza"], ["ハンバーガー", "hanbaagaa", "hamburger"], ["サンドイッチ", "sandoicchi", "sandwich"], ["レストラン", "resutoran", "restaurant"], ["メニュー", "menyuu", "menu"], ["フォーク", "fooku", "fork"], ["ナイフ", "naifu", "knife"], ["スプーン", "supuun", "spoon"], ["コップ", "koppu", "cup"], ["グラス", "gurasu", "glass"], ["テーブル", "teeburu", "table"], ["ソファ", "sofa", "sofa"], ["ベッド", "beddo", "bed"], ["ドア", "doa", "door"], ["カーテン", "kaaten", "curtain"], ["シャワー", "shawaa", "shower"], ["トイレ", "toire", "toilet"], ["キッチン", "kicchin", "kitchen"], ["エアコン", "eakon", "air conditioner"], ["エレベーター", "erebeetaa", "elevator"], ["アパート", "apaato", "apartment"], ["マンション", "manshon", "apartment building"], ["コンビニ", "konbini", "convenience store"], ["スーパー", "suupaa", "supermarket"], ["デパート", "depaato", "department store"], ["ショップ", "shoppu", "shop"], ["センター", "sentaa", "center"], ["ビル", "biru", "building"], ["オフィス", "ofisu", "office"], ["アルバイト", "arubaito", "part-time job"], ["サラリーマン", "sarariiman", "office worker"], ["スタッフ", "sutaffu", "staff"], ["チーム", "chiimu", "team"], ["グループ", "guruupu", "group"], ["クラス", "kurasu", "class"], ["テスト", "tesuto", "test"], ["ノート", "nooto", "notebook"], ["ペン", "pen", "pen"], ["ボールペン", "boorupen", "ballpoint pen"], ["シャープペンシル", "shaapupenshiru", "mechanical pencil"], ["ファイル", "fairu", "file"], ["コピー", "kopii", "copy"], ["ページ", "peeji", "page"], ["メール", "meeru", "email"], ["メッセージ", "messeeji", "message"], ["ニュース", "nyuusu", "news"], ["インターネット", "intaanetto", "internet"], ["ウェブ", "webu", "web"], ["サイト", "saito", "website"], ["アプリ", "apuri", "app"], ["ソフト", "sofuto", "software"], ["データ", "deeta", "data"], ["システム", "shisutemu", "system"], ["プログラム", "puroguramu", "program"], ["コード", "koodo", "code"], ["サーバー", "saabaa", "server"], ["ネットワーク", "nettowaaku", "network"], ["セキュリティ", "sekyuriti", "security"], ["パスワード", "pasuwaado", "password"], ["アカウント", "akaunto", "account"], ["ユーザー", "yuuzaa", "user"], ["ログイン", "roguin", "login"], ["ダウンロード", "daunroodo", "download"], ["アップロード", "appuroodo", "upload"], ["クリック", "kurikku", "click"], ["マウス", "mausu", "mouse"], ["キーボード", "kiiboodo", "keyboard"], ["モニター", "monitaa", "monitor"], ["ディスプレイ", "disupurei", "display"], ["プリンター", "purintaa", "printer"], ["スキャナー", "sukyanaa", "scanner"], ["イヤホン", "iyahon", "earphones"], ["ヘッドホン", "heddohon", "headphones"], ["マイク", "maiku", "microphone"], ["スピーカー", "supiikaa", "speaker"], ["バッテリー", "batterii", "battery"], ["ケーブル", "keeburu", "cable"], ["ボタン", "botan", "button"], ["スクリーン", "sukuriin", "screen"], ["ビデオ", "bideo", "video"], ["フォト", "foto", "photo"], ["カレンダー", "karendaa", "calendar"], ["スポーツ", "supootsu", "sports"], ["サッカー", "sakkaa", "soccer"], ["テニス", "tenisu", "tennis"], ["バスケットボール", "basukettobooru", "basketball"], ["バレーボール", "bareebooru", "volleyball"], ["ゴルフ", "gorufu", "golf"], ["ボクシング", "bokushingu", "boxing"], ["スキー", "sukii", "skiing"], ["スケート", "sukeeto", "skating"], ["トレーニング", "toreeningu", "training"], ["ジム", "jimu", "gym"], ["フィットネス", "fittonesu", "fitness"], ["ダンベル", "danberu", "dumbbell"], ["マシン", "mashin", "machine"], ["セット", "setto", "set"], ["フォーム", "foomu", "form"], ["パワー", "pawaa", "power"], ["スピード", "supiido", "speed"], ["エネルギー", "enerugii", "energy"], ["ファッション", "fasshon", "fashion"], ["シャツ", "shatsu", "shirt"], ["Tシャツ", "tiishatsu", "T-shirt"], ["セーター", "seetaa", "sweater"], ["ジャケット", "jaketto", "jacket"], ["コート", "kooto", "coat"], ["スーツ", "suutsu", "suit"], ["スカート", "sukaato", "skirt"], ["ジーンズ", "jiinzu", "jeans"], ["ズボン", "zubon", "pants"], ["パンツ", "pantsu", "pants / underwear"], ["ソックス", "sokkusu", "socks"], ["シューズ", "shuuzu", "shoes"], ["スニーカー", "suniikaa", "sneakers"], ["ブーツ", "buutsu", "boots"], ["サンダル", "sandaru", "sandals"], ["キャップ", "kyappu", "cap"], ["ネクタイ", "nekutai", "necktie"], ["バッグ", "baggu", "bag"], ["リュック", "ryukku", "backpack"], ["アクセサリー", "akusesarii", "accessory"], ["メイク", "meiku", "makeup"], ["クリーム", "kuriimu", "cream"], ["シャンプー", "shanpuu", "shampoo"], ["コンディショナー", "kondishonaa", "conditioner"], ["タオル", "taoru", "towel"], ["ブラシ", "burashi", "brush"], ["カラー", "karaa", "color"], ["サイズ", "saizu", "size"], ["スタイル", "sutairu", "style"], ["デザイン", "dezain", "design"], ["ブランド", "burando", "brand"], ["モデル", "moderu", "model"], ["タイプ", "taipu", "type"], ["ミュージック", "myuujikku", "music"], ["ロック", "rokku", "rock"], ["ポップ", "poppu", "pop"], ["ジャズ", "jazu", "jazz"], ["バンド", "bando", "band"], ["ギター", "gitaa", "guitar"], ["ベース", "beesu", "bass"], ["ドラム", "doramu", "drums"], ["ピアノ", "piano", "piano"], ["ライブ", "raibu", "live show"], ["コンサート", "konsaato", "concert"], ["チケット", "chiketto", "ticket"], ["ステージ", "suteeji", "stage"], ["映画", "eiga", "movie"], ["ドラマ", "dorama", "drama"], ["シリーズ", "shiriizu", "series"], ["キャラクター", "kyarakutaa", "character"], ["ストーリー", "sutoorii", "story"], ["シーン", "shiin", "scene"], ["アクション", "akushon", "action"], ["ホラー", "horaa", "horror"], ["コメディ", "komedi", "comedy"], ["ファンタジー", "fantajii", "fantasy"], ["ロボット", "robotto", "robot"], ["モンスター", "monsutaa", "monster"], ["ヒーロー", "hiiroo", "hero"], ["アイドル", "aidoru", "idol"], ["タレント", "tarento", "celebrity / talent"], ["スター", "sutaa", "star"], ["旅行", "ryokou", "travel"], ["タクシー", "takushii", "taxi"], ["バイク", "baiku", "motorcycle"], ["カー", "kaa", "car"], ["レンタカー", "rentakaa", "rental car"], ["トラック", "torakku", "truck"], ["ホーム", "hoomu", "platform / home"], ["ロビー", "robii", "lobby"], ["フロント", "furonto", "front desk"], ["ルーム", "ruumu", "room"], ["キー", "kii", "key"], ["カード", "kaado", "card"], ["パスポート", "pasupooto", "passport"], ["スーツケース", "suutsukeesu", "suitcase"], ["マップ", "mappu", "map"], ["ガイド", "gaido", "guide"], ["ツアー", "tsuaa", "tour"], ["ビーチ", "biichi", "beach"], ["プール", "puuru", "pool"], ["キャンプ", "kyanpu", "camping"], ["テント", "tento", "tent"], ["ビジネス", "bijinesu", "business"], ["会社", "kaisha", "company"], ["プロジェクト", "purojekuto", "project"], ["プラン", "puran", "plan"], ["アイデア", "aidea", "idea"], ["サービス", "saabisu", "service"], ["マーケット", "maaketto", "market"], ["セール", "seeru", "sale"], ["コスト", "kosuto", "cost"], ["プライス", "puraisu", "price"], ["ボーナス", "boonasu", "bonus"], ["リスク", "risuku", "risk"], ["チャンス", "chansu", "chance"], ["ゴール", "gooru", "goal"], ["ターゲット", "taagetto", "target"], ["レベル", "reberu", "level"], ["ポイント", "pointo", "point"], ["ルール", "ruuru", "rule"], ["マナー", "manaa", "manners"], ["トラブル", "toraburu", "trouble"], ["ミス", "misu", "mistake"], ["エラー", "eraa", "error"], ["チェック", "chekku", "check"], ["サポート", "sapooto", "support"], ["ヘルプ", "herupu", "help"], ["スタート", "sutaato", "start"], ["ストップ", "sutoppu", "stop"], ["オープン", "oopun", "open"], ["クローズ", "kuroozu", "close"], ["オン", "on", "on"], ["オフ", "ofu", "off"], ["プラス", "purasu", "plus"], ["マイナス", "mainasu", "minus"], ["ゼロ", "zero", "zero"], ["ナンバー", "nanbaa", "number"], ["リスト", "risuto", "list"], ["カテゴリー", "kategorii", "category"], ["タイトル", "taitoru", "title"], ["テーマ", "teema", "theme"], ["トピック", "topikku", "topic"], ["コメント", "komento", "comment"], ["レビュー", "rebyuu", "review"], ["フォロー", "foroo", "follow"], ["プロフィール", "purofiiru", "profile"], ["チャット", "chatto", "chat"], ["オンライン", "onrain", "online"], ["オフライン", "ofurain", "offline"], ["リンク", "rinku", "link"], ["ホームページ", "hoomupeeji", "homepage"], ["SNS", "esuenuuesu", "social media"], ["インスタグラム", "insutaguramu", "Instagram"], ["ユーチューブ", "yuuchuubu", "YouTube"], ["グーグル", "guuguru", "Google"], ["アメリカ", "amerika", "America / USA"], ["カナダ", "kanada", "Canada"], ["イギリス", "igirisu", "United Kingdom"], ["フランス", "furansu", "France"], ["ドイツ", "doitsu", "Germany"], ["イタリア", "itaria", "Italy"], ["スペイン", "supein", "Spain"], ["アルゼンチン", "aruzenchin", "Argentina"], ["ブラジル", "burajiru", "Brazil"], ["メキシコ", "mekishiko", "Mexico"], ["オーストラリア", "oosutoraria", "Australia"], ["インド", "indo", "India"], ["アジア", "ajia", "Asia"], ["ヨーロッパ", "yooroppa", "Europe"], ["アフリカ", "afurika", "Africa"], ["ロシア", "roshia", "Russia"], ["東京", "toukyou", "Tokyo"], ["ニューヨーク", "nyuuyooku", "New York"], ["ロンドン", "rondon", "London"], ["パリ", "pari", "Paris"], ["ローマ", "rooma", "Rome"], ["ベルリン", "berurin", "Berlin"], ["マドリード", "madoriido", "Madrid"], ["シドニー", "shidonii", "Sydney"], ["ペット", "petto", "pet"], ["ドッグ", "doggu", "dog"], ["キャット", "kyatto", "cat"], ["ハムスター", "hamusutaa", "hamster"], ["パンダ", "panda", "panda"], ["ライオン", "raion", "lion"], ["トラ", "tora", "tiger"], ["ゴリラ", "gorira", "gorilla"], ["コアラ", "koara", "koala"], ["カンガルー", "kangaruu", "kangaroo"], ["ペンギン", "pengin", "penguin"], ["イルカ", "iruka", "dolphin"], ["クジラ", "kujira", "whale"], ["サメ", "same", "shark"], ["クリスマス", "kurisumasu", "Christmas"], ["ハロウィン", "harowin", "Halloween"], ["バレンタイン", "barentain", "Valentine's Day"], ["プレゼント", "purezento", "present / gift"], ["パーティー", "paatii", "party"], ["イベント", "ibento", "event"], ["デート", "deeto", "date"], ["キス", "kisu", "kiss"], ["ラブ", "rabu", "love"], ["ハート", "haato", "heart"], ["ベビー", "bebii", "baby"], ["ファミリー", "famirii", "family"], ["ママ", "mama", "mom"], ["パパ", "papa", "dad"], ["ボーイ", "booi", "boy"], ["ガール", "gaaru", "girl"], ["メンバー", "menbaa", "member"], ["パートナー", "paatonaa", "partner"], ["カップル", "kappuru", "couple"], ["ドクター", "dokutaa", "doctor"], ["ナース", "naasu", "nurse"], ["クリニック", "kurinikku", "clinic"], ["マスク", "masuku", "mask"], ["ビタミン", "bitamin", "vitamin"], ["カロリー", "karorii", "calorie"], ["ダイエット", "daietto", "diet"], ["プロテイン", "purotein", "protein"], ["サプリ", "sapuri", "supplement"], ["ストレス", "sutoresu", "stress"], ["リラックス", "rirakkusu", "relax"], ["メンタル", "mentaru", "mental"], ["コンディション", "kondishon", "condition"], ["ケア", "kea", "care"], ["スーパーセンター", "suupaasentaa", "super center"], ["スーパーショップ", "suupaashoppu", "super shop"], ["スーパーストア", "suupaasutoa", "super store"], ["スーパーサービス", "suupaasaabisu", "super service"], ["スーパーシステム", "suupaashisutemu", "super system"], ["スーパーチーム", "suupaachiimu", "super team"], ["スーパークラブ", "suupaakurabu", "super club"], ["スーパールーム", "suupaaruumu", "super room"], ["スーパースクール", "suupaasukuuru", "super school"], ["スーパーサイト", "suupaasaito", "super site"], ["スーパーアプリ", "suupaaapuri", "super app"], ["スーパーカード", "suupaakaado", "super card"], ["スーパープラン", "suupaapuran", "super plan"], ["スーパーゲーム", "suupaageemu", "super game"], ["スーパーイベント", "suupaaibento", "super event"], ["スーパープロジェクト", "suupaapurojekuto", "super project"], ["スーパーマーケット", "suupaamaaketto", "super market"], ["スーパーニュース", "suupaanyuusu", "super news"], ["スーパーメディア", "suupaamedia", "super media"], ["スーパーホテル", "suupaahoteru", "super hotel"], ["ミニセンター", "minisentaa", "mini center"], ["ミニショップ", "minishoppu", "mini shop"], ["ミニストア", "minisutoa", "mini store"], ["ミニサービス", "minisaabisu", "mini service"], ["ミニシステム", "minishisutemu", "mini system"], ["ミニチーム", "minichiimu", "mini team"], ["ミニクラブ", "minikurabu", "mini club"], ["ミニルーム", "miniruumu", "mini room"], ["ミニスクール", "minisukuuru", "mini school"], ["ミニサイト", "minisaito", "mini site"], ["ミニアプリ", "miniapuri", "mini app"], ["ミニカード", "minikaado", "mini card"], ["ミニプラン", "minipuran", "mini plan"], ["ミニゲーム", "minigeemu", "mini game"], ["ミニイベント", "miniibento", "mini event"], ["ミニプロジェクト", "minipurojekuto", "mini project"], ["ミニマーケット", "minimaaketto", "mini market"], ["ミニニュース", "mininyuusu", "mini news"], ["ミニメディア", "minimedia", "mini media"], ["ミニホテル", "minihoteru", "mini hotel"], ["ニューセンター", "nyuusentaa", "new center"], ["ニューショップ", "nyuushoppu", "new shop"], ["ニューストア", "nyuusutoa", "new store"], ["ニューサービス", "nyuusaabisu", "new service"], ["ニューシステム", "nyuushisutemu", "new system"], ["ニューチーム", "nyuuchiimu", "new team"], ["ニュークラブ", "nyuukurabu", "new club"], ["ニュールーム", "nyuuruumu", "new room"], ["ニュースクール", "nyuusukuuru", "new school"], ["ニューサイト", "nyuusaito", "new site"], ["ニューアプリ", "nyuuapuri", "new app"], ["ニューカード", "nyuukaado", "new card"], ["ニュープラン", "nyuupuran", "new plan"], ["ニューゲーム", "nyuugeemu", "new game"], ["ニューイベント", "nyuuibento", "new event"], ["ニュープロジェクト", "nyuupurojekuto", "new project"], ["ニューマーケット", "nyuumaaketto", "new market"], ["ニューニュース", "nyuunyuusu", "new news"], ["ニューメディア", "nyuumedia", "new media"], ["ニューホテル", "nyuuhoteru", "new hotel"], ["オンラインセンター", "onrainsentaa", "online center"], ["オンラインショップ", "onrainshoppu", "online shop"], ["オンラインストア", "onrainsutoa", "online store"], ["オンラインサービス", "onrainsaabisu", "online service"], ["オンラインシステム", "onrainshisutemu", "online system"], ["オンラインチーム", "onrainchiimu", "online team"], ["オンラインクラブ", "onrainkurabu", "online club"], ["オンラインルーム", "onrainruumu", "online room"], ["オンラインスクール", "onrainsukuuru", "online school"], ["オンラインサイト", "onrainsaito", "online site"], ["オンラインアプリ", "onrainapuri", "online app"], ["オンラインカード", "onrainkaado", "online card"], ["オンラインプラン", "onrainpuran", "online plan"], ["オンラインゲーム", "onraingeemu", "online game"], ["オンラインイベント", "onrainibento", "online event"], ["オンラインプロジェクト", "onrainpurojekuto", "online project"], ["オンラインマーケット", "onrainmaaketto", "online market"], ["オンラインニュース", "onrainnyuusu", "online news"], ["オンラインメディア", "onrainmedia", "online media"], ["オンラインホテル", "onrainhoteru", "online hotel"], ["デジタルセンター", "dejitarusentaa", "digital center"], ["デジタルショップ", "dejitarushoppu", "digital shop"], ["デジタルストア", "dejitarusutoa", "digital store"], ["デジタルサービス", "dejitarusaabisu", "digital service"], ["デジタルシステム", "dejitarushisutemu", "digital system"], ["デジタルチーム", "dejitaruchiimu", "digital team"], ["デジタルクラブ", "dejitarukurabu", "digital club"], ["デジタルルーム", "dejitaruruumu", "digital room"], ["デジタルスクール", "dejitarusukuuru", "digital school"], ["デジタルサイト", "dejitarusaito", "digital site"], ["デジタルアプリ", "dejitaruapuri", "digital app"], ["デジタルカード", "dejitarukaado", "digital card"], ["デジタルプラン", "dejitarupuran", "digital plan"], ["デジタルゲーム", "dejitarugeemu", "digital game"], ["デジタルイベント", "dejitaruibento", "digital event"], ["デジタルプロジェクト", "dejitarupurojekuto", "digital project"], ["デジタルマーケット", "dejitarumaaketto", "digital market"], ["デジタルニュース", "dejitarunyuusu", "digital news"], ["デジタルメディア", "dejitarumedia", "digital media"], ["デジタルホテル", "dejitaruhoteru", "digital hotel"], ["スマートセンター", "sumaatosentaa", "smart center"], ["スマートショップ", "sumaatoshoppu", "smart shop"], ["スマートストア", "sumaatosutoa", "smart store"], ["スマートサービス", "sumaatosaabisu", "smart service"], ["スマートシステム", "sumaatoshisutemu", "smart system"], ["スマートチーム", "sumaatochiimu", "smart team"], ["スマートクラブ", "sumaatokurabu", "smart club"], ["スマートルーム", "sumaatoruumu", "smart room"], ["スマートスクール", "sumaatosukuuru", "smart school"], ["スマートサイト", "sumaatosaito", "smart site"], ["スマートアプリ", "sumaatoapuri", "smart app"], ["スマートカード", "sumaatokaado", "smart card"], ["スマートプラン", "sumaatopuran", "smart plan"], ["スマートゲーム", "sumaatogeemu", "smart game"], ["スマートイベント", "sumaatoibento", "smart event"], ["スマートプロジェクト", "sumaatopurojekuto", "smart project"], ["スマートマーケット", "sumaatomaaketto", "smart market"], ["スマートニュース", "sumaatonyuusu", "smart news"], ["スマートメディア", "sumaatomedia", "smart media"], ["スマートホテル", "sumaatohoteru", "smart hotel"], ["ホームセンター", "hoomusentaa", "home center"], ["ホームショップ", "hoomushoppu", "home shop"], ["ホームストア", "hoomusutoa", "home store"], ["ホームサービス", "hoomusaabisu", "home service"], ["ホームシステム", "hoomushisutemu", "home system"], ["ホームチーム", "hoomuchiimu", "home team"], ["ホームクラブ", "hoomukurabu", "home club"], ["ホームルーム", "hoomuruumu", "home room"], ["ホームスクール", "hoomusukuuru", "home school"], ["ホームサイト", "hoomusaito", "home site"], ["ホームアプリ", "hoomuapuri", "home app"], ["ホームカード", "hoomukaado", "home card"], ["ホームプラン", "hoomupuran", "home plan"], ["ホームゲーム", "hoomugeemu", "home game"], ["ホームイベント", "hoomuibento", "home event"], ["ホームプロジェクト", "hoomupurojekuto", "home project"], ["ホームマーケット", "hoomumaaketto", "home market"], ["ホームニュース", "hoomunyuusu", "home news"], ["ホームメディア", "hoomumedia", "home media"], ["ホームホテル", "hoomuhoteru", "home hotel"], ["ビジネスセンター", "bijinesusentaa", "business center"], ["ビジネスショップ", "bijinesushoppu", "business shop"], ["ビジネスストア", "bijinesusutoa", "business store"], ["ビジネスサービス", "bijinesusaabisu", "business service"], ["ビジネスシステム", "bijinesushisutemu", "business system"], ["ビジネスチーム", "bijinesuchiimu", "business team"], ["ビジネスクラブ", "bijinesukurabu", "business club"], ["ビジネスルーム", "bijinesuruumu", "business room"], ["ビジネススクール", "bijinesusukuuru", "business school"], ["ビジネスサイト", "bijinesusaito", "business site"], ["ビジネスアプリ", "bijinesuapuri", "business app"], ["ビジネスカード", "bijinesukaado", "business card"], ["ビジネスプラン", "bijinesupuran", "business plan"], ["ビジネスゲーム", "bijinesugeemu", "business game"], ["ビジネスイベント", "bijinesuibento", "business event"], ["ビジネスプロジェクト", "bijinesupurojekuto", "business project"], ["ビジネスマーケット", "bijinesumaaketto", "business market"], ["ビジネスニュース", "bijinesunyuusu", "business news"], ["ビジネスメディア", "bijinesumedia", "business media"], ["ビジネスホテル", "bijinesuhoteru", "business hotel"], ["スポーツセンター", "supootsusentaa", "sports center"], ["スポーツショップ", "supootsushoppu", "sports shop"], ["スポーツストア", "supootsusutoa", "sports store"], ["スポーツサービス", "supootsusaabisu", "sports service"], ["スポーツシステム", "supootsushisutemu", "sports system"], ["スポーツチーム", "supootsuchiimu", "sports team"], ["スポーツクラブ", "supootsukurabu", "sports club"], ["スポーツルーム", "supootsuruumu", "sports room"], ["スポーツスクール", "supootsusukuuru", "sports school"], ["スポーツサイト", "supootsusaito", "sports site"], ["スポーツアプリ", "supootsuapuri", "sports app"], ["スポーツカード", "supootsukaado", "sports card"], ["スポーツプラン", "supootsupuran", "sports plan"], ["スポーツゲーム", "supootsugeemu", "sports game"], ["スポーツイベント", "supootsuibento", "sports event"], ["スポーツプロジェクト", "supootsupurojekuto", "sports project"], ["スポーツマーケット", "supootsumaaketto", "sports market"], ["スポーツニュース", "supootsunyuusu", "sports news"], ["スポーツメディア", "supootsumedia", "sports media"], ["スポーツホテル", "supootsuhoteru", "sports hotel"], ["ゲームセンター", "geemusentaa", "game center"], ["ゲームショップ", "geemushoppu", "game shop"], ["ゲームストア", "geemusutoa", "game store"], ["ゲームサービス", "geemusaabisu", "game service"], ["ゲームシステム", "geemushisutemu", "game system"], ["ゲームチーム", "geemuchiimu", "game team"], ["ゲームクラブ", "geemukurabu", "game club"], ["ゲームルーム", "geemuruumu", "game room"], ["ゲームスクール", "geemusukuuru", "game school"], ["ゲームサイト", "geemusaito", "game site"], ["ゲームアプリ", "geemuapuri", "game app"], ["ゲームカード", "geemukaado", "game card"], ["ゲームプラン", "geemupuran", "game plan"], ["ゲームゲーム", "geemugeemu", "game game"], ["ゲームイベント", "geemuibento", "game event"], ["ゲームプロジェクト", "geemupurojekuto", "game project"], ["ゲームマーケット", "geemumaaketto", "game market"], ["ゲームニュース", "geemunyuusu", "game news"], ["ゲームメディア", "geemumedia", "game media"], ["ゲームホテル", "geemuhoteru", "game hotel"], ["データサービス", "deetasaabisu", "data service"], ["データシステム", "deetashisutemu", "data system"], ["データエンジニア", "deetaenjinia", "data engineer"], ["データチーム", "deetachiimu", "data team"], ["データツール", "deetatsuuru", "data tool"], ["データプラットフォーム", "deetapurattofoomu", "data platform"], ["データプロジェクト", "deetapurojekuto", "data project"], ["データビジネス", "deetabijinesu", "data business"], ["データセンター", "deetasentaa", "data center"], ["ウェブサービス", "webusaabisu", "web service"], ["ウェブシステム", "webushisutemu", "web system"], ["ウェブエンジニア", "webuenjinia", "web engineer"], ["ウェブチーム", "webuchiimu", "web team"], ["ウェブツール", "webutsuuru", "web tool"], ["ウェブプラットフォーム", "webupurattofoomu", "web platform"], ["ウェブプロジェクト", "webupurojekuto", "web project"], ["ウェブビジネス", "webubijinesu", "web business"], ["ウェブセンター", "webusentaa", "web center"], ["ネットサービス", "nettosaabisu", "internet service"], ["ネットシステム", "nettoshisutemu", "internet system"], ["ネットエンジニア", "nettoenjinia", "internet engineer"], ["ネットチーム", "nettochiimu", "internet team"], ["ネットツール", "nettotsuuru", "internet tool"], ["ネットプラットフォーム", "nettopurattofoomu", "internet platform"], ["ネットプロジェクト", "nettopurojekuto", "internet project"], ["ネットビジネス", "nettobijinesu", "internet business"], ["ネットセンター", "nettosentaa", "internet center"], ["クラウドサービス", "kuraudosaabisu", "cloud service"], ["クラウドシステム", "kuraudoshisutemu", "cloud system"], ["クラウドエンジニア", "kuraudoenjinia", "cloud engineer"], ["クラウドチーム", "kuraudochiimu", "cloud team"], ["クラウドツール", "kuraudotsuuru", "cloud tool"], ["クラウドプラットフォーム", "kuraudopurattofoomu", "cloud platform"], ["クラウドプロジェクト", "kuraudopurojekuto", "cloud project"], ["クラウドビジネス", "kuraudobijinesu", "cloud business"], ["クラウドセンター", "kuraudosentaa", "cloud center"], ["モバイルサービス", "mobairusaabisu", "mobile service"], ["モバイルシステム", "mobairushisutemu", "mobile system"], ["モバイルエンジニア", "mobairuenjinia", "mobile engineer"], ["モバイルチーム", "mobairuchiimu", "mobile team"], ["モバイルツール", "mobairutsuuru", "mobile tool"], ["モバイルプラットフォーム", "mobairupurattofoomu", "mobile platform"], ["モバイルプロジェクト", "mobairupurojekuto", "mobile project"], ["モバイルビジネス", "mobairubijinesu", "mobile business"], ["モバイルセンター", "mobairusentaa", "mobile center"], ["セキュリティサービス", "sekyuritisaabisu", "security service"], ["セキュリティシステム", "sekyuritishisutemu", "security system"], ["セキュリティエンジニア", "sekyuritienjinia", "security engineer"], ["セキュリティチーム", "sekyuritichiimu", "security team"], ["セキュリティツール", "sekyurititsuuru", "security tool"], ["セキュリティプラットフォーム", "sekyuritipurattofoomu", "security platform"], ["セキュリティプロジェクト", "sekyuritipurojekuto", "security project"], ["セキュリティビジネス", "sekyuritibijinesu", "security business"], ["セキュリティセンター", "sekyuritisentaa", "security center"], ["ソフトウェアサービス", "sofutoweasaabisu", "software service"], ["ソフトウェアシステム", "sofutoweashisutemu", "software system"], ["ソフトウェアエンジニア", "sofutoweaenjinia", "software engineer"], ["ソフトウェアチーム", "sofutoweachiimu", "software team"], ["ソフトウェアツール", "sofutoweatsuuru", "software tool"], ["ソフトウェアプラットフォーム", "sofutoweapurattofoomu", "software platform"], ["ソフトウェアプロジェクト", "sofutoweapurojekuto", "software project"], ["ソフトウェアビジネス", "sofutoweabijinesu", "software business"], ["ソフトウェアセンター", "sofutoweasentaa", "software center"], ["ハードウェアサービス", "haadoweasaabisu", "hardware service"], ["ハードウェアシステム", "haadoweashisutemu", "hardware system"], ["ハードウェアエンジニア", "haadoweaenjinia", "hardware engineer"], ["ハードウェアチーム", "haadoweachiimu", "hardware team"], ["ハードウェアツール", "haadoweatsuuru", "hardware tool"], ["ハードウェアプラットフォーム", "haadoweapurattofoomu", "hardware platform"], ["ハードウェアプロジェクト", "haadoweapurojekuto", "hardware project"], ["ハードウェアビジネス", "haadoweabijinesu", "hardware business"], ["ハードウェアセンター", "haadoweasentaa", "hardware center"], ["AIサービス", "eeaisaabisu", "AI service"], ["AIシステム", "eeaishisutemu", "AI system"], ["AIエンジニア", "eeaienjinia", "AI engineer"], ["AIチーム", "eeaichiimu", "AI team"], ["AIツール", "eeaitsuuru", "AI tool"], ["AIプラットフォーム", "eeaipurattofoomu", "AI platform"], ["AIプロジェクト", "eeaipurojekuto", "AI project"], ["AIビジネス", "eeaibijinesu", "AI business"], ["AIセンター", "eeaisentaa", "AI center"], ["ITサービス", "aithiisaabisu", "IT service"], ["ITシステム", "aithiishisutemu", "IT system"], ["ITエンジニア", "aithiienjinia", "IT engineer"], ["ITチーム", "aithiichiimu", "IT team"], ["ITツール", "aithiitsuuru", "IT tool"], ["ITプラットフォーム", "aithiipurattofoomu", "IT platform"], ["ITプロジェクト", "aithiipurojekuto", "IT project"], ["ITビジネス", "aithiibijinesu", "IT business"], ["ITセンター", "aithiisentaa", "IT center"]];
+
+const KATAKANA_ROWS={
+ a:['ア','イ','ウ','エ','オ'],
+ ka:['カ','キ','ク','ケ','コ'],
+ sa:['サ','シ','ス','セ','ソ'],
+ ta:['タ','チ','ツ','テ','ト'],
+ na:['ナ','ニ','ヌ','ネ','ノ'],
+ ha:['ハ','ヒ','フ','ヘ','ホ'],
+ ma:['マ','ミ','ム','メ','モ'],
+ ya:['ヤ','ユ','ヨ'],
+ ra:['ラ','リ','ル','レ','ロ'],
+ wa:['ワ','ヲ'],
+ n:['ン'],
+ ga:['ガ','ギ','グ','ゲ','ゴ'],
+ za:['ザ','ジ','ズ','ゼ','ゾ'],
+ da:['ダ','ヂ','ヅ','デ','ド'],
+ ba:['バ','ビ','ブ','ベ','ボ'],
+ pa:['パ','ピ','プ','ペ','ポ']
+};
+const BASIC_ROWS=['a','ka','sa','ta','na','ha','ma','ya','ra','wa','n'];
+const ALL_ROWS=[...BASIC_ROWS,'ga','za','da','ba','pa'];
+const ROW_LABEL={a:'A',ka:'KA',sa:'SA',ta:'TA',na:'NA',ha:'HA',ma:'MA',ya:'YA',ra:'RA',wa:'WA',n:'N',ga:'GA',za:'ZA',da:'DA',ba:'BA',pa:'PA'};
+const BASIC_KANA=new Set(BASIC_ROWS.flatMap(r=>KATAKANA_ROWS[r]));
+const ALL_KANA=new Set(ALL_ROWS.flatMap(r=>KATAKANA_ROWS[r]));
+const SELECTION_KEY='katakana-practice-my-selection-v1';
+
+function loadSavedSelection(){
+ try{
+  const x=JSON.parse(localStorage.getItem(SELECTION_KEY)||'null');
+  if(Array.isArray(x))return x.filter(k=>ALL_KANA.has(k));
+ }catch(e){}
+ return [...ALL_KANA];
+}
+let mySelection=loadSavedSelection();
+let activeSelection=new Set(mySelection);
+
+function saveMySelection(){
+ localStorage.setItem(SELECTION_KEY,JSON.stringify([...mySelection]));
+}
+function setCheckboxesFromSelection(){
+ document.querySelectorAll('[data-kana]').forEach(cb=>{
+  cb.checked=activeSelection.has(cb.dataset.kana);
+ });
+}
+function selectedKanaPool(){
+ return kana.filter(([k])=>activeSelection.has(k));
+}
+function eligibleWords(){
+ // Strict filter: every character must be selected, except ン which is
+ // always allowed in word practice. Small kana, ー, Latin letters, kanji,
+ // punctuation, etc. are excluded unless explicitly represented/selected.
+ return words.filter(w=>[...w[0]].every(ch=>activeSelection.has(ch)||ch==='ン'));
+}
+function updateSelectionSummary(){
+ const count=activeSelection.size;
+ const available=eligibleWords().length;
+ const rowStates=ALL_ROWS
+  .filter(r=>KATAKANA_ROWS[r].every(k=>activeSelection.has(k)))
+  .map(r=>ROW_LABEL[r]);
+ $('#selectionSummary').innerHTML=
+  `<b>Selected Katakana:</b> ${count}`+
+  ` &nbsp; · &nbsp; <b>Available words:</b> ${available}<br>`+
+  `<b>Complete rows:</b> ${rowStates.length?rowStates.join(' · '):'none'}<br>`+
+  `<span>Word mode always allows ン. Any other unselected character makes a word ineligible.</span>`;
+}
+function saveCurrentAsMySelection(){
+ mySelection=[...activeSelection];
+ saveMySelection();
+ $('#practicePreset').value='my';
+ updateSelectionSummary();
+}
+function applySelection(chars,{save=false,preset='custom'}={}){
+ activeSelection=new Set(chars.filter(k=>ALL_KANA.has(k)));
+ setCheckboxesFromSelection();
+ if(save){
+  mySelection=[...activeSelection];
+  saveMySelection();
+  preset='my';
+ }
+ $('#practicePreset').value=preset;
+ updateSelectionSummary();
+ pick();
+}
+function syncFromIndividualChecks(){
+ activeSelection=new Set(
+  [...document.querySelectorAll('[data-kana]:checked')].map(cb=>cb.dataset.kana)
+ );
+ saveCurrentAsMySelection();
+ pick();
+}
+function toggleRow(row){
+ const chars=KATAKANA_ROWS[row]||[];
+ const allOn=chars.every(k=>activeSelection.has(k));
+ chars.forEach(k=>{
+  if(allOn)activeSelection.delete(k);
+  else activeSelection.add(k);
+ });
+ setCheckboxesFromSelection();
+ saveCurrentAsMySelection();
+ pick();
+}
+
+let mode='paper',current=null,score=0,total=0,answered=false,last=-1;
+const $=s=>document.querySelector(s);
+const areas={paper:$('#paperArea'),type:$('#typeArea'),choice:$('#choiceArea'),wordPaper:$('#wordPaperArea'),wordType:$('#wordTypeArea')};
+const prompt=$('#prompt'),input=$('#answer'),revealed=$('#revealed'),tf=$('#typeFeedback'),cf=$('#choiceFeedback'),choices=$('#choices'),wInput=$('#wordAnswer'),wFeedback=$('#wordFeedback'),wRevealed=$('#wordRevealed');
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function updateScore(){$('#score').textContent=score;$('#total').textContent=total}
+function clean(){answered=false;revealed.textContent='';tf.textContent='';tf.className='feedback';cf.textContent='';cf.className='feedback';input.value='';choices.innerHTML='';wInput.value='';wFeedback.textContent='';wFeedback.className='feedback';wRevealed.textContent=''}
+function pick(){
+ clean();
+
+ if(mode==='wordPaper'||mode==='wordType'){
+  const pool=eligibleWords();
+
+  if(!pool.length){
+   current=null;
+   $('#instruction').textContent='Word practice';
+   prompt.textContent='';
+   $('#meaning').innerHTML='<span class="empty-state">No words are available with your current selection. Select more Katakana.</span>';
+   return;
+  }
+
+  current=pool[Math.floor(Math.random()*pool.length)];
+
+  if(mode==='wordPaper'){
+   $('#instruction').textContent=`Read the romaji and write the whole word in katakana · ${pool.length} eligible words`;
+   prompt.textContent=current[1];
+   $('#meaning').textContent='Meaning: '+current[2];
+  }else{
+   $('#instruction').textContent=`Read the katakana and type the whole word in romaji · ${pool.length} eligible words`;
+   prompt.textContent=current[0];
+   $('#meaning').textContent='Meaning: '+current[2];
+   setTimeout(()=>wInput.focus(),20);
+  }
+  return;
+ }
+
+ const pool=selectedKanaPool();
+
+ if(!pool.length){
+  current=null;
+  $('#instruction').textContent='Katakana practice';
+  prompt.textContent='';
+  $('#meaning').innerHTML='<span class="empty-state">No Katakana selected. Select at least one character.</span>';
+  return;
+ }
+
+ let i;
+ do{i=Math.floor(Math.random()*pool.length)}while(pool.length>1&&pool[i][0]===last);
+ current=pool[i];
+ last=current[0];
+ $('#meaning').textContent='';
+
+ if(mode==='paper'){
+  $('#instruction').textContent='Read the romaji and write the matching katakana';
+  prompt.textContent=current[1];
+ }else if(mode==='type'){
+  $('#instruction').textContent='Read the katakana and type its romaji';
+  prompt.textContent=current[0];
+  setTimeout(()=>input.focus(),20);
+ }else{
+  $('#instruction').textContent='Which romaji matches this katakana?';
+  prompt.textContent=current[0];
+
+  const all=[...new Set(pool.map(x=>x[1]))].filter(x=>x!==current[1]);
+  const opts=shuffle(shuffle(all).slice(0,3).concat(current[1]));
+
+  opts.forEach(v=>{
+   const b=document.createElement('button');
+   b.type='button';
+   b.textContent=v;
+   b.addEventListener('click',()=>choose(v));
+   choices.appendChild(b);
+  });
+ }
+}
+function setMode(m){mode=m;Object.entries(areas).forEach(([k,v])=>v.classList.toggle('hidden',k!==m));['paperMode','typeMode','choiceMode','wordPaperMode','wordTypeMode'].forEach(id=>$('#'+id).classList.remove('active'));const ids={paper:'paperMode',type:'typeMode',choice:'choiceMode',wordPaper:'wordPaperMode',wordType:'wordTypeMode'};$('#'+ids[m]).classList.add('active');pick()}
+function checkKana(){if(!current)return;if(answered){pick();return}const v=input.value.trim().toLowerCase().replace(/\s+/g,'');if(!v){tf.textContent='Type an answer first.';tf.className='feedback bad';return}answered=true;total++;if(v===current[1]){score++;tf.textContent='✓ Correct!';tf.className='feedback good'}else{tf.textContent='✗ Correct answer: '+current[1];tf.className='feedback bad'}updateScore()}
+function checkWord(){if(!current)return;if(answered){pick();return}const v=wInput.value.trim().toLowerCase().replace(/\s+/g,'');if(!v){wFeedback.textContent='Type an answer first.';wFeedback.className='feedback bad';return}answered=true;total++;if(v===current[1]){score++;wFeedback.textContent='✓ Correct!';wFeedback.className='feedback good'}else{wFeedback.textContent='✗ Correct answer: '+current[1];wFeedback.className='feedback bad'}updateScore()}
+function choose(v){if(!current||answered)return;answered=true;total++;const ok=v===current[1];if(ok)score++;cf.textContent=ok?'✓ Correct!':'✗ Correct answer: '+current[1];cf.className='feedback '+(ok?'good':'bad');[...choices.children].forEach(b=>{b.disabled=true;if(b.textContent===current[1])b.classList.add('active')});updateScore()}
+$('#reveal').addEventListener('click',()=>{if(current)revealed.textContent=current[0]});$('#check').addEventListener('click',checkKana);input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkKana()}});
+$('#wordReveal').addEventListener('click',()=>{if(current)wRevealed.textContent=current[0]});$('#wordCheck').addEventListener('click',checkWord);wInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkWord()}});
+$('#paperMode').addEventListener('click',()=>setMode('paper'));$('#typeMode').addEventListener('click',()=>setMode('type'));$('#choiceMode').addEventListener('click',()=>setMode('choice'));$('#wordPaperMode').addEventListener('click',()=>setMode('wordPaper'));$('#wordTypeMode').addEventListener('click',()=>setMode('wordType'));
+
+document.querySelectorAll('[data-kana]').forEach(cb=>{
+ cb.addEventListener('change',syncFromIndividualChecks);
+});
+document.querySelectorAll('[data-toggle-row]').forEach(btn=>{
+ btn.addEventListener('click',()=>toggleRow(btn.dataset.toggleRow));
+});
+
+$('#practicePreset').addEventListener('change',e=>{
+ const v=e.target.value;
+ if(v==='my')applySelection(mySelection,{preset:'my'});
+ else if(v==='basic')applySelection([...BASIC_KANA],{preset:'basic'});
+ else if(v==='all')applySelection([...ALL_KANA],{preset:'all'});
+ else applySelection([...activeSelection],{preset:'custom'});
+});
+
+$('#selectAllKana').addEventListener('click',()=>applySelection([...ALL_KANA],{save:true}));
+$('#clearAllKana').addEventListener('click',()=>applySelection([],{save:true}));
+
+$('#next').addEventListener('click',pick);
+$('#randomize').addEventListener('click',pick);
+$('#reset').addEventListener('click',()=>{score=0;total=0;updateScore();pick()});
+
+applySelection(mySelection,{preset:'my'});
+setMode('paper');
+</script></body></html>
