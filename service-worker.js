@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "japanese-apps-v1";
+const CACHE_NAME = "japanese-apps-v2";
 
 const APP_FILES = [
   "./",
@@ -11,7 +11,8 @@ const APP_FILES = [
   "./KATAKANA%20PRACTICE.html",
   "./SPEED%20HIRAGANA.html",
   "./SPEED%20KATAKANA.html",
-  "./VOCABULARY_FINAL%20(EDGE).html"
+  "./VOCABULARY_FINAL%20(EDGE).html",
+  "./JAPANESEWRITING.html"
 ];
 
 self.addEventListener("install", (event) => {
@@ -19,11 +20,18 @@ self.addEventListener("install", (event) => {
     caches.open(CACHE_NAME).then(async (cache) => {
       for (const file of APP_FILES) {
         try {
-          await cache.add(file);
+          const response = await fetch(file, { cache: "reload" });
+
+          if (response.ok) {
+            await cache.put(file, response);
+          } else {
+            console.warn("Could not cache:", file, response.status);
+          }
         } catch (error) {
           console.warn("Could not cache:", file, error);
         }
       }
+
       await self.skipWaiting();
     })
   );
@@ -50,44 +58,51 @@ self.addEventListener("fetch", (event) => {
   // Only handle requests from this website.
   if (url.origin !== self.location.origin) return;
 
-  // Pages: try the network first, then use the saved copy.
+  // Pages: network first, saved copy if offline.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
         .then((response) => {
           if (response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) =>
-              cache.put(request, copy)
-            );
+
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, copy);
+            });
           }
+
           return response;
         })
         .catch(async () => {
           return (
             await caches.match(request)
           ) || (
+            await caches.match(url.pathname)
+          ) || (
             await caches.match("./index.html")
           );
         })
     );
+
     return;
   }
 
-  // Other same-origin files: saved copy first.
+  // Other same-origin resources: cache first.
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.match(request).then(async (cached) => {
       if (cached) return cached;
 
-      return fetch(request).then((response) => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) =>
-            cache.put(request, copy)
-          );
-        }
-        return response;
-      });
+      const response = await fetch(request);
+
+      if (response.ok) {
+        const copy = response.clone();
+
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, copy);
+        });
+      }
+
+      return response;
     })
   );
 });
